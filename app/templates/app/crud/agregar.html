@@ -1,0 +1,38 @@
+{% extends 'app/admin.html' %}
+
+{% block contenido %}
+
+
+
+
+
+<br>
+<br>
+<div class="container" style="font-size: 16px;">
+    <div class="row">
+        <div class="col-md-5 mx-auto mt-4">
+            <div class="card" style="width: 30rem; border-radius: 10px;"> 
+                <h2 class="text-center font-weight-bold">Agregar Manga</h2>
+                <div class="card-body col-md-5">
+                    <form action="" method="post" enctype="multipart/form-data">
+
+                        {% csrf_token %}
+                        {{ form }}
+
+                        <div class="d-flex justify-content-end" style="margin-left: 28rem;">
+                            <input type="reset" value="Cancelar" class="btn btn-secondary">
+                            &nbsp;
+                            <input type="submit" value="Guardar" class="btn btn-primary">
+                        </div>
+
+                    </form>
+                    {{mensaje}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock %}

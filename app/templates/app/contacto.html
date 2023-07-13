@@ -1,0 +1,40 @@
+{% extends 'app/base.html' %}
+    {% load static %}
+    <link rel="icon" href="{% static 'app/img/logo.png' %}">
+	{% block css %}
+    <link rel="stylesheet" href="{% static 'app/vistas/contacto.css' %}">
+    <link rel="stylesheet" href="{% static 'app/vistas/base.css' %}">
+    {% endblock  %}
+
+{% block contenido%}
+
+{% comment %} contenido que agrregara la denisse {% endcomment %}
+    <br>
+    <br>
+    <br>
+    <div class="container" style="background-color: #fff; width: 45rem; border-radius: 20px;">
+        <br>
+        <div class="row">
+            <div class="col-md-5 mx-auto mt-4">
+                <h1 class="text-center text-dark font-weight-bold font-italic">Contacto</h2>
+                    <br>
+                    <form action="" class="formulario_contacto" method="post">
+                    
+                        {%csrf_token%}
+                    
+                        {{form}}
+                        <br>
+                        <br>
+                        <div class="d-flex justify-content-center">
+                            <input align="center" type="submit" class="btn btn-primary" name="btnEnviar" value="Enviar">
+                        </div>
+        
+                    </form>
+                    {{mensaje}}
+                    <br>
+            </div>
+            <br>
+        </div>
+    </div>
+
+{% endblock  %}

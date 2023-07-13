@@ -1,0 +1,9 @@
+/* configuracionde fondo inicio */
+body{
+    background-image: url(../img/fondo7.jpg);
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+}
+/* configuracionde fondo fin */

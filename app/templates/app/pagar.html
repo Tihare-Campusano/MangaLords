@@ -1,0 +1,121 @@
+{% extends 'app/base.html' %}
+{% load static %}
+    <link rel="icon" href="{% static 'app/img/logo.png' %}">
+    {% block css %}
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" href="{% static 'app/vistas/pagar.css' %}">
+        <link rel="stylesheet" href="{% static 'app/vistas/base.css' %}">
+    {% endblock  %}
+
+	{% block js %}
+	<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.3/dist/jquery.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="{% static 'app/javaScript/registroScript.js'%}"></script>
+	{% endblock  %}
+    
+
+
+{% block contenido%}
+{% load static %}
+    <!-- cuerpo -->
+    <div class="container Cpagar">
+        <form action="" class="needs-validation" novalidate>
+            <div class="row">
+                <div class="col">
+                    <h3 class="title">Dirección de Envío</h3>
+    
+                    <div class="form-group inputBox">
+                        <label for="uname">Nombre Completo :</label>
+                        <input type="text" placeholder="Jose Luis Campos Lejos" id="name" name="name" required>
+                        <div class="valid-feedback">Válida.</div>
+                        <div class="invalid-feedback">Porfavor rellenar este campo.</div>
+                    </div>
+                    <div class="form-group inputBox">
+                        <span>Email :</span>
+                        <input type="email" class="form-control" id="email" placeholder="correo@example.com" name="email" required multiple>
+                        <div class="valid-feedback">Válida.</div>
+                        <div class="invalid-feedback">Porfavor rellenar este campo.</div>
+                    </div>
+                    <div class="form-group inputBox">
+                        <span>Número de teléfono :</span>
+                        <input type="tel" class="form-control" id="tel" placeholder="912345678" name="tel" required maxlength="9">
+                        <div class="valid-feedback">Válida.</div>
+                        <div class="invalid-feedback">Porfavor rellenar este campo.</div>
+                    </div>
+                    <div class="form-group inputBox">
+                        <span>Dirección :</span>
+                        <input type="text" placeholder="región - calle - edificio" id="direccion" name="direccion" required>
+                        <div class="valid-feedback">Válida.</div>
+                        <div class="invalid-feedback">Porfavor rellenar este campo.</div>
+                    </div>
+                    <div class="form-group inputBox">
+                        <span>Ciudad :</span>
+                        <input type="text" placeholder="Concón" id="city" name="city" required>
+                        <div class="valid-feedback">Válida.</div>
+                        <div class="invalid-feedback">Porfavor rellenar este campo.</div>
+                    </div>
+    
+                    <div class="flex">
+                        <div class="form-group inputBox">
+                            <span>Región :</span>
+                            <input type="text" placeholder="Valparaiso" id="region" name="region" required>
+                            <div class="valid-feedback">Válida.</div>
+                            <div class="invalid-feedback">Porfavor rellenar este campo.</div>
+                        </div>
+                        <div class="form-group inputBox">
+                            <span>Código postal :</span>
+                            <input type="text" placeholder="123 0000" id="cod" name="cod" required maxlength="8">
+                            <div class="valid-feedback">Válida.</div>
+                            <div class="invalid-feedback">Porfavor rellenar este campo.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <h3 class="title">Pago</h3>
+    
+                    <div class="form-group inputBox">
+                        <span>Modo de pago:</span>
+                        <img src="{% static 'app/img/card_img.png'%}" alt="">
+                    </div>
+                    <div class="form-group inputBox">
+                        <span>Nombre titular tarjeta :</span>
+                        <input type="text" placeholder="Jose Luis Campos Lejos" id="user" name="user" required>
+                        <div class="valid-feedback">Válida.</div>
+                        <div class="invalid-feedback">Porfavor rellenar este campo.</div>
+                    </div>
+                    <div class="form-group inputBox">
+                        <span>Número de tarjeta :</span>
+                        <input type="number" placeholder="1111222233334444" id="numTar" name="numTar" required maxlength="16">
+                        <div class="valid-feedback">Válida.</div>
+                        <div class="invalid-feedback">Porfavor rellenar este campo.</div>
+                    </div>
+                    <div class="form-group inputBox">
+                        <span>Mes Expiración :</span>
+                        <input type="number" placeholder="06" id="numTar" name="numTar" required maxlength="2">
+                        <div class="valid-feedback">Válida.</div>
+                        <div class="invalid-feedback">Porfavor rellenar este campo.</div>
+                    </div>
+
+                    <div class="form-group inputBox">
+                        <span>Año Expiración :</span>
+                        <input type="number" placeholder="2020" id="numTar" name="numTar" required maxlength="4">
+                        <div class="valid-feedback">Válida.</div>
+                        <div class="invalid-feedback">Porfavor rellenar este campo.</div>
+                    </div>
+    
+                    <div class="flex">
+                        <div class="form-group inputBox">
+                            <span>CVV :</span>
+                            <input type="number" placeholder="123" id="cvv" name="cvv" required maxlength="3">
+                            <div class="valid-feedback">Válida.</div>
+                            <div class="invalid-feedback">Porfavor rellenar este campo.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <input type="submit" value="Pagar" class="submit-btn">
+        </form>
+    </div>
+    <!-- cuerpo -->
+{% endblock %}

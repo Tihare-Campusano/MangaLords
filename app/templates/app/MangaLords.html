@@ -1,0 +1,178 @@
+{% extends 'app/base.html' %}
+{% load static %}
+    <link rel="icon" href="{% static 'app/img/logo.png' %}">
+    {% block css %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'app/vistas/menu.css' %}">
+    <link rel="stylesheet" href="{% static 'app/vistas/base.css' %}">
+    {% endblock  %}
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.3/dist/jquery.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+
+{% block contenido%}
+    <!-- carrusel -->
+    <div class="container-carousel" style="padding: 5%;">
+        <div id="myCarousel" class="carousel slide" data-ride="carousel">
+            <!-- Indicators -->
+            <ol class="carousel-indicators">
+                <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+                <li data-target="#myCarousel" data-slide-to="1"></li>
+                <li data-target="#myCarousel" data-slide-to="2"></li>
+                <li data-target="#myCarousel" data-slide-to="3"></li>
+            </ol>
+            {% load static %}
+            <!-- Wrapper for slides -->
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img src="{% static 'app/img/ofertas.jpg'%}" alt="Ofertas" style="width:100%;">
+                </div>
+                <div class="carousel-item">
+                    <img src="{% static 'app/img/novedades.png'%}"  alt="novedades" style="width:100%;">
+                </div>
+                <div class="carousel-item">
+                    <img src="{% static 'app/img/explora'%}"  alt="explora" style="width:100%;">
+                </div>
+                <div class="carousel-item">
+                    <img src="{% static 'app/img/editoriales.jpg'%}"  alt="editoriales" style="width:100%;">
+                </div>
+            </div>
+            <!-- Left and right controls -->
+            <a class="carousel-control-prev" href="#myCarousel" data-slide="prev">
+                <span class="carousel-control-prev-icon"></span>
+            </a>
+            <a class="carousel-control-next" href="#myCarousel" data-slide="next">
+                <span class="carousel-control-next-icon"></span>
+            </a>
+        </div>
+    </div>
+    <br>
+    <!-- carrusel -->
+    <!-- sobre nosotros -->
+    <style>
+        .cube {
+            width: 162px;
+            height: 162px;
+            cursor: pointer;
+            display: inline-block;
+        }
+        .imgG{
+            transition:all .5s ease-in-out;
+        }
+        .imgG:hover{
+            filter: blur(5px);
+        }
+    </style>
+    <div class="container contenedor_gen" style="background-color: #cfcbcb; border-radius:20px;">
+        <div class="row">
+            <div class="col-md-6">
+                <br>
+                <br>
+                <div class="container">
+                <!-- Contenido del container izquierdo -->
+                    <h2 class="text-center" style="font-family: 'Times New Roman', Times, serif;">GÉNEROS</h2>
+                    <br>
+                    <div class="container">
+                        <p class="text-center font-weight-bold">¿Te gustaría explorar el maravilloso mundo de los Mangas?</p>
+                    <p class="text-center font-weight-bold">Aquí podrás encontrar los mejores mangas y con una gran variedad de géneros por descubrir
+                        , que te dejaran con la boca abierta.¿Estás dispuesto a sumergirte en este m, maravilloso mundo y explorar un mundo diferente?
+                    </p>
+                    </div>
+                    <br>
+                    <div class="d-flex justify-content-center">
+                        <a href="{% url 'directorio' %}" class="btn btn-warning d-inline-block">Ver Mangas</a>
+                    </div>
+                </div>
+                <br>
+                <br>
+            </div>
+            <br>
+            <div class="col-md-6">
+                <br>
+                <br>
+                <div class="container" style="padding: 3px 3px 3px 3px">
+                    {% load static %}
+                <!-- Contenido del container derecho -->
+                    <ul class="list-inline">
+                        <li class="cube border">
+                            <span class="img_area">
+                                <span class="skin"></span>
+                                <img class="imgG" src="{% static 'app/img/iconYuri.jpg'%}" alt="" style="height: 162px; width: 162px">
+                            </span>
+                        </li>
+                        <li class="cube border">
+                            <span class="skin"></span>
+                            <img class="imgG" src="{% static 'app/img/yaoi.jpg'%}" alt="" style="height: 162px; width: 162px">
+                        </li>
+                        <li class="cube border">
+                            <span class="skin"></span>
+                            <img class="imgG" src="{% static 'app/img/romance.jpg'%}" alt="" style="height: 162px; width: 162px">
+                        </li>
+                        <li class="cube border">
+                            <span class="skin"></span>
+                            <img class="imgG" src="{% static 'app/img/gore.jpg'%}" alt="" style="height: 162px; width: 162px">
+                        </li>
+                        <li class="cube border">
+                            <span class="skin"></span>
+                            <img class="imgG" src="{% static 'app/img/Guts.jpeg'%}" alt="" style="height: 162px; width: 162px">
+                        </li>
+                        <li class="cube border">
+                            <span class="skin"></span>
+                            <img class="imgG" src="{% static 'app/img/goku.jpg'%}" alt="" style="height: 162px; width: 162px">
+                        </li>
+                    </ul>
+                </div>
+                <br>
+                <br>
+            </div>
+        </div>
+    </div>
+    <!-- sobre nosotros -->
+    <!-- /* parte extra */ -->
+    <section class="seccionExtra">
+        <!-- contenedor -->
+        <div class="contenedor Sextra">
+            <!-- caja 1 -->
+            <div class="Sextra_caja">
+                <div class="icon_extra">
+                    <i class="fa-sharp fa-solid fa-truck-fast icono1"></i>
+                </div>
+                <div class="descriptionG">
+                    <strong class="tituloG" style="color: rgb(25, 25, 25);">Envíos rápidos y seguros</strong>
+                    <p class="desc" style="color: #777777;  text-align: center;">Envíos rápidos y completamente seguros, llega en perfectas condiciones a tu hogar.</p>
+                </div>
+            </div>
+            <!-- caja 2 -->
+            <div class="Sextra_caja">
+                <div class="icon_extra">
+                    <i class="fa-solid fa-headset icono1"></i>
+                </div>
+                <div class="descriptionG">
+                    <strong class="tituloG" style="color: rgb(25, 25, 25);">Atención al cliente</strong>
+                    <p class="desc" style="color: #777777,;">Lunes a Viernes de 10:00 AM a 19:00 PM</p>
+                </div>
+            </div>
+            <!-- caja 3 -->
+            <div class="Sextra_caja">
+                <div class="icon_extra">
+                    <i class="fa-sharp fa-solid fa-handshake icono1"></i>
+                </div>
+                <div class="descriptionG">
+                    <strong class="tituloG" style="color: rgb(25, 25, 25);">Comprometidos con tu pedido</strong>
+                    <p class="desc" style="color: #777777;  text-align: center;">Pedido empacado completamente y en perfectas condiciones.</p>
+                </div>
+            </div>
+            <!-- caja 4 -->
+            <div class="Sextra_caja">
+                <div class="icon_extra">
+                    <i class="fa-solid fa-gifts icono1"></i>
+                </div>
+                <div class="descriptionG">
+                    <strong class="tituloG" style="color: rgb(25, 25, 25);">Beneficios por ser cliente</strong>
+                    <p class="desc" style="color: #777777;  text-align: center;">Entre más compras, más oportunidad de ganar premios.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- /* parte extra */ -->
+{% endblock %}

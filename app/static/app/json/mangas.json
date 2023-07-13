@@ -1,0 +1,84 @@
+{
+    "mangas":[
+        {
+            "0":{
+                "imagen":"https://i.imgur.com/qrb3uH8.png", 
+                "titulo":"Citrus 02",
+                "editorial":"Ivrea España",
+                "precio":10000,
+                "descripcion":"La madre de Yuzu se ha vuelto a casar, y eso trajo cambios a su vida: una nueva ciudad, un nuevo hogar, un nuevo insti. Para ella, nada fue acorde a lo que esperaba, ya que ahora tiene clases en un instituto femenino superestricto y conservador. Así pues, en lugar de su tan soñado dulce romance de bachillerato, debe soportar los constantes regaños de la presidenta del consejo estudiantil, Mei, quien además ¡resulta ser su nueva medio hermana! Mei es la hija del nuevo marido de la mamá de Yuzu. Pero el tiempo le demostrará que entre el odio y el amor no hay tanta distancia...",
+                "cantidad": 1
+            }
+        },
+        {
+            "1":{
+                "imagen":"https://i.imgur.com/7ijOJQ8.jpeg", 
+                "titulo":"Another 04",
+                "editorial":"Ivrea España",
+                "precio":9500,
+                "descripcion":"Misaki, un popular estudiante de la clase 3-3 de la Yomiyama North Middle School, murió repentinamente a mitad de curso. En la primavera de 1998, un chico de 15 años llamado Koichi Sakakibara es trasladado a esa misma clase, ahí conoce a Mei Misaki, una chica bastante rara a la que tanto sus profesores como compañeros de clase ignoran. Inesperadamente una serie de asesinatos causa la desesperación entre los alumnos de la clase 3-3. Koichi y Mei descubren que esas muertes están relacionadas con la de Misaki en 1972 y se proponen descubrir qué las causa y cómo detenerlas antes de convertirse en las próximas víctimas.",
+                "cantidad": 1
+            }
+        },
+        {
+            "2":{
+                "imagen":"https://i.imgur.com/qNDUn9H.jpeg", 
+                "titulo":"Demon Slayer 13",
+                "editorial":"Ivrea Argentina",
+                "precio":9000,
+                "descripcion":"La aldea de los forjadores de espadas nichirin es atacada por las Crecientes Cuatro y Cinco. Tanjiro, Nezuko y Genya forman un equipo para tratar de vencer a Hantengu, la Creciente Cuatro, pero tienen muchas dificultades. Nos enteramos del pasado de Genya y de su hermano mayor, Sanemi, el Pilar del Viento. Por otro lado, Tokito se enfrenta a Gyokko, la Creciente Cinco, para salvar a Kotetsu, y Kanroji llega para unirse a la defensa de la aldea.",
+                "cantidad": 1
+            }
+        },
+        {
+            "3":{
+                "imagen":"https://i.imgur.com/ZRypJt2.jpeg", 
+                "titulo":"La habitación felicidad 04",
+                "editorial":"Ivrea Argentina",
+                "precio":10000,
+                "descripcion":"Tras ser secuestrada, una chica desgraciada es feliz por primera vez. El día que la secuestran empieza una vida con un hilo de esperanza. Ella le promete a su secuestrador que se casarán y él le ofrece felicidad. ¿Cómo pueden tener una relación tan cálida siendo un secuestrador y su víctima?",
+                "cantidad": 1
+            }
+        },
+        {
+            "4":{
+                "imagen":"https://i.imgur.com/BNVzqv2.jpeg", 
+                "titulo":"Farewell, My Dear Cramer 01",
+                "editorial":"Distrito Manga",
+                "precio":20000,
+                "descripcion":"Nozomi siempre ha jugado en el equipo masculino y es un prodigio con el balón. Sumire es la joven promesa de su instituto, pero las demás no están a la altura. Cuando sus caminos se crucen ¿Serán capaces de abrirse paso hasta la victoria y devolverle la fama al fútbol femenino?",
+                "cantidad": 1
+            }
+        },
+        {
+            "5":{
+                "imagen":"https://i.imgur.com/7f7c2Ix.jpeg", 
+                "titulo":"Ataque a los Titanes 17",
+                "editorial":"Norma",
+                "precio":9900,
+                "descripcion":"El cuerpo de exploración se ha convertido en el grupo de rebeldes dispuesto a derrocar al gobierno corrupto y coronar a la verdadera dinastía que debe gobernar a los humanos. Y para ello, Historia deberá arriesgarlo todo...",
+                "cantidad": 1
+            }
+        },
+        {
+            "6":{
+                "imagen":"https://i.imgur.com/sXAJB08.jpeg", 
+                "titulo":"Blom Into You 04",
+                "editorial":"Panini MX",
+                "precio":12000,
+                "descripcion":"Con la llegada del verano se realiza el campamento de ensayo de la obra del consejo estudiantil que tanto anhela Toko Nanami. Toko, Yu y Sayaka, asisten al campamento, cada una con sus sentimientos ocultos. Por otro lado, el ideal que buscaba alcanzar Toko empieza a agitarse... No te enamores de mí, ¿de acuerdo?",
+                "cantidad": 1
+            }
+        },
+        {
+            "7":{
+                "imagen":"https://i.imgur.com/YdGxP9T.jpeg", 
+                "titulo":"Akame ga kill 02",
+                "editorial":"Norma",
+                "precio":9900,
+                "descripcion":"¡¡LLEGA AKAME, LA ASESINA DE OJOS ROJOS MÁS ESPERADA!! Tatsumi viaja a la capital en busca de fortuna, pero tras caer en manos de unos villanos, un grupo de asesinos, el Night Raid, le rescata. Y es entonces cuando decide que podría estar bien unirse a ellos para luchar contra la injusticia…",
+                "cantidad": 1
+            }
+        }
+    ]
+}

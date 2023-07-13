@@ -1,0 +1,369 @@
+{% extends 'app/base.html' %}
+
+{% load static %}
+
+    {% block css %}
+    <link rel="stylesheet" href="{% static 'app/vistas/directorio.css' %}">
+    <link rel="stylesheet" href="{% static 'app/vistas/base.css' %}">
+    {% endblock %}
+
+
+{% block contenido%}
+{% load static %}
+<style>
+    .imgD{
+        transition:all .5s ease-in-out;
+    }
+    .imgD:hover{
+        filter: blur(5px);
+        -webkit-transform: rotateY(180deg);
+        -webkit-transform-style: preserve-3d;
+        transform: rotateY(180deg);
+        transform-style: preserve-3d;
+    }
+</style>
+    <!-- mangas vistas -->
+    <div class="container py-5 containerM">
+        <div class="row g-4">
+            {% for manga in mangas %}
+            <div id="manga" class="col-xs-8 col-sm-6 col-md-4">
+                <div id="manga2" class="card p-4 bg-body-tertiary" style="background-color: #dbdbdb; width: 350px; height: 600px;">
+                    <div id="manga3" class="card-body text-center">
+                        <h2 class="card-title text-center font-weight-bold" style="font-size: 27px;">{{ manga.titulo }}</h2>
+                        <p class="card-text text-center text-italic">{{ manga.editorial }}</p>
+                        <div id="imagenM" class="card-img-top mx-auto" style="width: 200px; display:block; height: 350px;">
+                            <a href="{% url 'vistaManga' pk=manga.id %}">
+                                <img class="card-img-top mx-auto mt-3 mb-5 img-fluid img-thumbnail imgD" src={{ manga.imagen.url }} alt="card-image" style=" cursor:pinter;">
+                            </a>
+                        </div>
+                        <a href="{% url 'vistaManga' pk=manga.id %}" class="btn btn-warning d-inline-block">Ver Manga</a>
+                    </div>
+                </div>
+                <br>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <!-- fin -->
+    <!-- inicio seccion de generos -->
+    <section class="seccionGenero rounded" style="background-color: #fff; box-shadow: 2px 2px 30px rgba(0, 0, 0, 0.3);">
+        <br>
+        <br>
+        <div class="testimonio__header">
+            <h1 class="gen">»»————-★Géneros★————-««</h1>
+        </div>
+        <!-- contenedor -->
+        <div class="testimonios_contenedor">
+            <!-- caja 1 -->
+            <div class="seccionG_caja">
+                <div class="fotoGenero">
+                    <img class="imagenG" src="{% static 'app/img/seinenG.png'%}" alt="">
+                </div>
+                <div class="descriptionG">
+                    <strong class="tituloG" style="color: rgb(25, 25, 25);">Seinen</strong>
+                    <p class="desc" style="color: #777777">Atrae a una audiencia masculina mayor de edad.</p>
+                </div>
+            </div>
+            <!-- caja 2 -->
+            <div class="seccionG_caja">
+                <div class="fotoGenero">
+                    <img class="imagenG" src="{% static 'app/img/shonenG.png'%}" alt="">
+                </div>
+                <div class="descriptionG">
+                    <strong class="tituloG" style="color: rgb(25, 25, 25);">Shōnen</strong>
+                    <p class="desc" style="color: #777777">Series con grandes dosis de acción.</p>
+                </div>
+            </div>
+            <!-- caja 3 -->
+            <div class="seccionG_caja">
+                <div class="fotoGenero">
+                    <img class="imagenG" src="{% static 'app/img/yuriG.png'%}" alt="">
+                </div>
+                <div class="descriptionG">
+                    <strong class="tituloG" style="color: rgb(25, 25, 25);">Yuri</strong>
+                    <p class="desc" style="color: #777777">También conocido como Girls’ Love, centra sus temáticas en las relaciones románticas entre dos personajes del sexo femenino.</p>
+                </div>
+            </div>
+            <!-- caja 4 -->
+            <div class="seccionG_caja">
+                <div class="fotoGenero">
+                    <img class="imagenG" src="{% static 'app/img/shojoG.png'%}" alt="">
+                </div>
+                <div class="descriptionG">
+                    <strong class="tituloG" style="color: rgb(25, 25, 25);">Shojo</strong>
+                    <p class="desc" style="color: #777777">Va dirigido a chicas adolescentes.</p>
+                </div>
+            </div>
+            <!-- caja 5 -->
+            <div class="seccionG_caja">
+                <div class="fotoGenero">
+                    <img class="imagenG" src="{% static 'app/img/yaoiG.png'%}" alt="">
+                </div>
+                <div class="descriptionG">
+                    <strong class="tituloG" style="color: rgb(25, 25, 25);">Yaoi</strong>
+                    <p class="desc" style="color: #777777">También conocido como Boys’ Love, centra sus temáticas en las relaciones románticas entre dos personajes del sexo masculino</p>
+                </div>
+            </div>
+            <!-- caja 6 -->
+            <div class="seccionG_caja">
+                <div class="fotoGenero">
+                    <img class="imagenG" src="{% static 'app/img/jeseiG.png'%}"alt="">
+                </div>
+                <div class="descriptionG">
+                    <strong class="tituloG" style="color: rgb(25, 25, 25);">Josei</strong>
+                    <p class="desc" style="color: #777777">Va dirigido especialmente para las mujeres adultas.</p>
+                </div>
+            </div>
+        </div>
+        <br>
+        <br>
+        <br>
+        <br>
+    </section>
+    <!-- fin seccion de generos -->
+    <!-- seccion de comentarios inicio -->
+    <section class="testimonios">
+        <div class="testimonio__header">
+            <h1 class="comentarios">»»————-★Comentarios★————-««</h1>
+            <span class="texto1">Reseñas u opiniones de Clientes que nos prefieren.</span>
+        </div>
+        <!-- contenedor de comnetarios -->
+        <div class="testimonios_contenedor">
+            <!-- caja 1 -->
+            <div class="testimonios_caja">
+                <div class="caja-top">
+                    <div class="perfil">
+                        <div class="perfil-img">
+                            <img src="{% static 'app/img/iconRebe.png'%}" alt="">
+                        </div>
+                            <!-- nombre de usuario -->
+                            <div class="name-user">
+                            <strong>Rebeca Sugar</strong>
+                            <span>@rebe_stiven200</span>
+                        </div>
+                    </div>
+                    <!-- Reseñas -->
+                    <div class="reseñas">
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                    </div>
+                </div>
+                <!-- comentarios -->
+                <div class="comentarios__clientes">
+                    <p>"Excelentes mangas, una de las mejores tiendas online en las que he comprado, tienen un catálogo espectacular."</p>
+                </div>
+            </div>
+            <!-- caja 2 -->
+            <div class="testimonios_caja">
+                <div class="caja-top">
+                    <div class="perfil">
+                        <div class="perfil-img">
+                            <img src="{% static 'app/img/iconTuai.png'%}" alt="">
+                        </div>
+                            <!-- nombre de usuario -->
+                            <div class="name-user">
+                            <strong>Tuailait Sparkle</strong>
+                            <span>@spark_tuiTui2</span>
+                            </div>
+                    </div>
+                    <!-- Reseñas -->
+                    <div class="reseñas">
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                    </div>
+                </div>
+                <!-- comentarios -->
+                <div class="comentarios__clientes">
+                    <p>"Waaaa me gustaron los mangas, súper bueniss, más que recomendada esta página. Les mando un beso con toda la magia de la amistad."</p>
+                </div>
+            </div>
+            <!-- caja 3 -->
+            <div class="testimonios_caja">
+                <div class="caja-top">
+                    <div class="perfil">
+                        <div class="perfil-img">
+                            <img src="{% static 'app/img/iconPolar.png'%}" alt="">
+                        </div>
+                            <!-- nombre de usuario -->
+                            <div class="name-user">
+                            <strong>Polar</strong>
+                            <span>@soy_polaruwu</span>
+                        </div>
+                    </div>
+                    <!-- Reseñas -->
+                    <div class="reseñas">
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                    </div>
+                </div>
+                <!-- comentarios -->
+                <div class="comentarios__clientes">
+                    <p>"A polar le gusto la página, polar se siente feliz, polar está muy agradecido."</p>
+                </div>
+            </div>
+            <!-- caja 4 -->
+            <div class="testimonios_caja">
+                <div class="caja-top">
+                    <div class="perfil">
+                        <div class="perfil-img">
+                            <img src="{% static 'app/img/iconJake.png'%}" alt="">
+                        </div>
+                            <!-- nombre de usuario -->
+                            <div class="name-user">
+                            <strong>Jake Dog</strong>
+                            <span>@jakeeeeeeeeeAu</span>
+                        </div>
+                    </div>
+                    <!-- Reseñas -->
+                    <div class="reseñas">
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                    </div>
+                </div>
+                <!-- comentarios -->
+                <div class="comentarios__clientes">
+                    <p>"Ay dios pero que barbaridad, esta pagina esta buenota Auuuu Auuuu."</p>
+                </div>
+            </div>
+            <!-- caja 5 -->
+            <div class="testimonios_caja">
+                <div class="caja-top">
+                    <div class="perfil">
+                        <div class="perfil-img">
+                            <img src="{% static 'app/img/iconGerman.png'%}" alt="">
+                        </div>
+                            <!-- nombre de usuario -->
+                            <div class="name-user">
+                            <strong>Germán Garmendia</strong>
+                            <span>@germanchelo_chelo</span>
+                        </div>
+                    </div>
+                    <!-- Reseñas -->
+                    <div class="reseñas">
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                    </div>
+                </div>
+                <!-- comentarios -->
+                <div class="comentarios__clientes">
+                    <p>"La mejor página que he visto en mi vida, nunca había visto nada igual, lo mejor de lo mejor. Gracias por todo y les mando un abrazo sicológico Adiosss."</p>
+                </div>
+            </div>
+            <!-- caja 6 -->
+            <div class="testimonios_caja">
+                <div class="caja-top">
+                    <div class="perfil">
+                        <div class="perfil-img">
+                            <img src="{% static 'app/img/iconIbai.png'%}" alt="">
+                        </div>
+                            <!-- nombre de usuario -->
+                            <div class="name-user">
+                            <strong>Ibai Llanos</strong>
+                            <span>@ibaillanos</span>
+                        </div>
+                    </div>
+                    <!-- Reseñas -->
+                    <div class="reseñas">
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                    </div>
+                </div>
+                <!-- comentarios -->
+                <div class="comentarios__clientes">
+                    <p>"Me cago en la madre, página de la hostia, dios es que es en serio, esta p*ta página no llega a España, os odio chicos, os odio.   o(TヘTo) くぅ"</p>
+                </div>
+            </div>
+            <!-- caja 7 -->
+            <div class="testimonios_caja">
+                <div class="caja-top">
+                    <div class="perfil">
+                        <div class="perfil-img">
+                            <img src="{% static 'app/img/iconAuron.png'%}" alt="">
+                        </div>
+                            <!-- nombre de usuario -->
+                            <div class="name-user">
+                            <strong>Raúl Álvarez</strong>
+                            <span>@auron._</span>
+                        </div>
+                    </div>
+                    <!-- Reseñas -->
+                    <div class="reseñas">
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                    </div>
+                </div>
+                <!-- comentarios -->
+                <div class="comentarios__clientes">
+                    <p>"Es una página de la hostia, muy genial todo, pero no llega a España, por lo que tuve que pedir para Argentina:)"</p>
+                </div>
+            </div>
+            <!-- caja 8 -->
+            <div class="testimonios_caja">
+                <div class="caja-top">
+                    <div class="perfil">
+                        <div class="perfil-img">
+                            <img src="{% static 'app/img/iconKido.png'%}" alt="">
+                        </div>
+                            <!-- nombre de usuario -->
+                            <div class="name-user">
+                            <strong>Tsubomi Kido</strong>
+                            <span>@kido</span>
+                        </div>
+                    </div>
+                    <!-- Reseñas -->
+                    <div class="reseñas">
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                    </div>
+                </div>
+                <!-- comentarios -->
+                <div class="comentarios__clientes">
+                    <p>"それは素晴らしいページです。私はこれらのマンガをヘッドフォンで読みましたが、音楽がいかに素晴らしいかです。"</p>
+                </div>
+            </div>
+            <!-- caja 9 -->
+            <div class="testimonios_caja">
+                <div class="caja-top">
+                    <div class="perfil">
+                        <div class="perfil-img">
+                            <img src="{% static 'app/img/iconGoku.png'%}" alt="">
+                        </div>
+                            <!-- nombre de usuario -->
+                            <div class="name-user">
+                            <strong>Son Gokū</strong>
+                            <span>@goku</span>
+                        </div>
+                    </div>
+                    <!-- Reseñas -->
+                    <div class="reseñas">
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                    </div>
+                </div>
+                <!-- comentarios -->
+                <div class="comentarios__clientes">
+                    <p>"Kamen jame haaaaaaaaaaaaaaaaaaaaaaaaaaa"</p>
+                </div>
+            </div>
+        </div>
+        <div class="espacionoma">
+            <label class="espacio"></label>
+        </div>
+    </section>
+    <!-- seccion de comentarios fin -->
+{% endblock %}

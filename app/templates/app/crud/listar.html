@@ -1,0 +1,39 @@
+{% extends 'app/admin.html' %}
+
+{% block contenido %}
+{% load humanize %}
+<br>
+<br>
+<br>
+<div class="card">
+    <div class="card-body">
+        <h2>Listado de Mangas</h2>
+        <hr>
+        <table class="table table-stripped table-hover table-responsive-sm">
+            <tr>
+                <th>Titulo</th>
+                <th>Precio</th>
+                <th>Editorial</th>
+                <th>Opciones</th>
+            </tr>
+
+            {% for p in mangas %}
+
+            <tr>
+                <td>{{ p.titulo | title }}</td>
+                <td>${{ p.precio | intcomma }}</td>
+                <td>{{ p.editorial | title }}</td>
+                <td>
+                    <a href="{% url 'modificar_manga' p.id %}" class="btn btn-info btn-sm">Modificar</a>
+                    <a href="{% url 'eliminar_producto' p.id %}" class="btn btn-danger btn-sm">Eliminar</a>
+                </td>
+
+            </tr>
+
+            {% endfor %}
+        </table>
+    </div>
+</div>
+
+
+{% endblock %}
