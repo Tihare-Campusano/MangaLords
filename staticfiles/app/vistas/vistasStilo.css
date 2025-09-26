@@ -1,0 +1,54 @@
+/* configuracionde fondo inicio */
+body{
+    background-image: url(../img/fondo2.jpg);
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+}
+/* configuracionde fondo fin */
+/* inicio barra de navegacion */
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: sans-serif;
+}
+/* cuerpo */
+.card{
+    display: flex;
+    margin-top: 6rem;
+}
+.col .imagen .img{
+    width: 344px;
+    height: 499px;
+    align-items: center;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    display: inline-block;
+    margin-left: 10rem;
+}
+.boton-agregar {
+    line-height: 40px;
+    background: #6f0009;
+    color: #fff;
+    font-weight: bold;
+    font-size: 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: .1s ease all;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+.box{
+    display: inline-block;
+    margin-top: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}

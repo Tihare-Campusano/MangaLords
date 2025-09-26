@@ -1,1 +1,1 @@
-web: gunicorn app.wsgi
+web: gunicorn MangaLords.wsgi:application --log-file -
