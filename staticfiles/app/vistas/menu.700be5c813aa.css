@@ -1,0 +1,90 @@
+/* configuracionde fondo inicio */
+body{
+    background-image: url("../img/fondo4.be4e91c61a89.jpg");
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+}
+/* configuracionde fondo fin */
+/* carrusel */
+.carousel-inner img {
+    width: 100%;
+    height: 100%;
+}
+/* carrusel */
+
+/* nosotros */
+.contSobreNos{
+    display: block;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    opacity: 90%;
+    background: #c5c5c5;
+    box-shadow: 7px 13px 37px #2a2a2a;
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -ms-border-radius: 10px;
+    -o-border-radius: 10px;
+}
+.contSobreNos .nosotrosName{
+    color:#141313;
+    font-size: 5rem;
+    align-items: center;
+    padding: 20px;
+    padding-left: 13rem;
+}
+.contSobreNos .textoNosotros{
+    color: #141313;
+    font-size: 20px;
+    align-items: center;
+    margin-left: 20px;
+    margin-right: 20px;
+    padding-bottom: 60px;
+}
+.contSobreNos .imgSobreNosotros{
+    display: flex;
+    margin-left: 9rem;
+    width: 800px;
+    height: 500px;
+}
+/* nosotros */
+
+/* parte extra */
+.seccionExtra{
+    display: flex;
+    margin-top: 5rem;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 100%;
+}
+.Sextra_caja{
+    width: 450px;
+    /* box-shadow: 2px 2px 30px rgba(0, 0, 0, 0.1); */
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 15px;
+    margin: 15px;
+    cursor: pointer;
+}
+.icon_extra .icono1{
+    font-size: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #185e83;
+}
+.tituloG{
+    display: flex;
+    margin-top: 10px;
+    justify-content: center;
+    font-size: 23px;
+    color: #16165B;
+}
+.desc{
+    display: flex;
+    margin-top: 10px;
+    justify-content: center;
+}
+/* parte extra */

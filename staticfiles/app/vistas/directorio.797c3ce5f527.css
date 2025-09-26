@@ -1,0 +1,162 @@
+/* configuracionde fondo inicio */
+body{
+    background-image: url("../img/fondoU.e0c5f991d917.jpg");
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+}
+/* configuracionde fondo fin */
+#containerM #manga #manga2 #manga3 #imagenM img{
+    transition:all .5s ease-in-out;
+}
+#containerM #manga #manga2 #manga3 #imagenM img:hover{
+    -webkit-transform: rotateY(180deg);
+    -webkit-transform-style: preserve-3d;
+    transform: rotateY(180deg);
+    transform-style: preserve-3d;
+}
+/* contenido extra de prueba */
+
+/* inicio stilo comentarios */
+.testimonios{
+    /* width: auto; */
+    display: flex;
+    margin-top: 4rem;
+    background: #e1e0e0;
+    justify-content: center;
+    flex-direction: column;
+    width: auto;
+    margin: auto;
+    padding: 30px;
+    margin-top: 100px;
+    border-radius:4px;
+    box-shadow: 7px 13px 37px #2a2a2a;
+}
+.espacionoma .espacio{
+    display: flex;
+    margin-top: 4rem;
+}
+.testimonio__header{
+    margin: 20px 0px;
+    padding: 10px 20px;
+    display: flex;
+    flex-direction: column;
+    
+    justify-content: center;
+    align-items: center;
+}
+.testimonio__header .comentarios{
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-size: 2.6rem;
+    color: #040476;
+    padding: 10px 20px;
+}
+.testimonio__header .texto1{
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-size: 1.3rem;
+    color: #484876;
+}
+.testimonios_contenedor{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 100%;
+}
+.testimonios_caja{
+    width: 500px;
+    box-shadow: 2px 2px 30px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    padding: 20px;
+    margin: 15px;
+    cursor: pointer;
+}
+.perfil-img{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    -ms-border-radius: 50%;
+    -o-border-radius: 50%;
+    overflow: hidden;
+    margin-right: 30px;
+}
+.perfil-img img{
+    width: 100%;
+    height: 100%;
+    object-fit: center;
+}
+.perfil{
+    display: flex;
+    align-items: center;
+}
+.name-user{
+    display: flex;
+    flex-direction: column;
+}
+.name-user strong{
+    color: #000;
+    font-size: 1.3rem;
+}
+.name-user span{
+    color: #2b2b2b;
+    font-size: 15px;
+}
+.reseñas{
+    color: #f9d71c;
+}
+.caja-top{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.comentarios__clientes{
+    color: #000;
+    font-size: 20px;
+}
+/* fin stilo comentarios */
+
+/* inicio seccion generos */
+.seccionGeneros{
+    display: flex;
+    margin-top: 5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+.seccionG_caja{
+    width: 350px;
+    box-shadow: 2px 2px 30px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    padding: 20px;
+    margin: 15px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+.seccionG_caja .fotoGenero .imagenG{
+    width: 200px;
+    height: 350px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+.seccionG_caja .descriptionG .tituloG{
+    display: flex;
+    margin-top: 10px;
+    justify-content: center;
+    font-size: 27px;
+}
+.seccionG_caja .descriptionG .desc{
+    display: flex;
+    margin-top: 10px;
+    justify-content: center;
+}
+/* fin secciongeneros */
