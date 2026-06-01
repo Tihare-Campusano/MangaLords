@@ -1,5 +1,8 @@
 from django.urls import path
-from .views import MangaLords, carrito, directorio, inicioSecion, pagar, Registro, contacto, vistaManga,agregar_producto, listar_productos, modificar_manga, eliminar_producto, admin, cerrarSesion
+from .views import (MangaLords, carrito, directorio, inicioSecion, pagar, Registro,
+                    contacto, vistaManga, agregar_producto, listar_productos,
+                    modificar_manga, eliminar_producto, admin, cerrarSesion,
+                    request_password_reset, verify_reset_code, reset_password)
 
 # imagenes
 from django.conf import settings
@@ -17,6 +20,11 @@ urlpatterns = [
     path('vistaManga/<str:pk>',vistaManga, name='vistaManga'),
     path('cerrarSesion/',cerrarSesion, name='cerrarSesion'),
     
+    # Password reset OTP
+    path('password-reset/request/', request_password_reset, name='request_password_reset'),
+    path('password-reset/verify/', verify_reset_code, name='verify_reset_code'),
+    path('password-reset/reset/', reset_password, name='reset_password'),
+    
     #crud
     path('agregar_producto/', agregar_producto, name="agregar_producto"),    
     path('listar_productos/', listar_productos, name="listar_productos"),     
@@ -26,4 +34,4 @@ urlpatterns = [
     #Carrito
     
     
-]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,45 +1,168 @@
 {% extends 'app/base.html' %}
 {% load static %}
-    <link rel="icon" href="{% static 'app/img/logo.png' %}">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.3/dist/jquery.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+{% block navbar %}{% endblock %}
+{% block footer %}{% endblock %}
 
 
-{% block contenido%}
-{% load static %}
-    <!-- segundo intento -->
-<section class="form-register">
-    <div class="container">
-        <h2 class="text-center" style="font-size: 30px;">Registrarse</h2>
-        <div class="form-row">
-            <br>
-            <form action="" class="needs-validation" id="registro_cli" method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-                <div class="form-goup col-md-7" style="margin-left:110px">
-                    {{registroCli.as_p}}
+{% block contenido %}
+<div class="registro-wrapper">
+    <section class="form-register">
+        <div class="form-container">
+            <h2 class="form-title">Crear Cuenta</h2>
+            
+            {% if registroCli.non_field_errors %}
+                <div class="formulario__alerta-global">
+                    {% for error in registroCli.non_field_errors %}
+                        <p class="m-0"><i class="fa-solid fa-triangle-exclamation"></i> {{ error }}</p>
+                    {% endfor %}
                 </div>
-                <br>
-                <br>
-                <div class="d-flex align-items-center justify-content-center">
-                    <br>
-                    <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
-                        Registrar
+            {% endif %}
+
+            <form action="" method="POST" novalidate>
+                {% csrf_token %}
+                
+                <div class="form-row-custom">
+                    <!-- Nombres -->
+                    <div class="formulario__grupo" id="grupo__nombres">
+                        <label for="id_nombres" class="formulario__label">Nombres</label>
+                        <div class="formulario__grupo-input">
+                            <i class="formulario__icon fa-solid fa-user"></i>
+                            <input type="text" 
+                                   name="nombres" 
+                                   maxlength="500" 
+                                   required 
+                                   id="id_nombres" 
+                                   class="formulario__input" 
+                                   placeholder="Juan" 
+                                   value="{{ registroCli.nombres.value|default:'' }}">
+                        </div>
+                        {% if registroCli.nombres.errors %}
+                            {% for error in registroCli.nombres.errors %}
+                                <p class="formulario__input-error"><i class="fa-solid fa-circle-exclamation"></i> {{ error }}</p>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+
+                    <!-- Apellidos -->
+                    <div class="formulario__grupo" id="grupo__apellidos">
+                        <label for="id_apellidos" class="formulario__label">Apellidos</label>
+                        <div class="formulario__grupo-input">
+                            <i class="formulario__icon fa-solid fa-user"></i>
+                            <input type="text" 
+                                   name="apellidos" 
+                                   maxlength="500" 
+                                   required 
+                                   id="id_apellidos" 
+                                   class="formulario__input" 
+                                   placeholder="Pérez" 
+                                   value="{{ registroCli.apellidos.value|default:'' }}">
+                        </div>
+                        {% if registroCli.apellidos.errors %}
+                            {% for error in registroCli.apellidos.errors %}
+                                <p class="formulario__input-error"><i class="fa-solid fa-circle-exclamation"></i> {{ error }}</p>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="form-row-custom">
+                    <!-- Email -->
+                    <div class="formulario__grupo" id="grupo__email">
+                        <label for="id_email" class="formulario__label">Correo Electrónico</label>
+                        <div class="formulario__grupo-input">
+                            <i class="formulario__icon fa-solid fa-envelope"></i>
+                            <input type="email" 
+                                   name="email" 
+                                   required 
+                                   id="id_email" 
+                                   class="formulario__input" 
+                                   placeholder="juan.perez@correo.com" 
+                                   value="{{ registroCli.email.value|default:'' }}">
+                        </div>
+                        {% if registroCli.email.errors %}
+                            {% for error in registroCli.email.errors %}
+                                <p class="formulario__input-error"><i class="fa-solid fa-circle-exclamation"></i> {{ error }}</p>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+
+                    <!-- Telefono -->
+                    <div class="formulario__grupo" id="grupo__telefono">
+                        <label for="id_telefono" class="formulario__label">Teléfono</label>
+                        <div class="formulario__grupo-input">
+                            <i class="formulario__icon fa-solid fa-phone"></i>
+                            <input type="number" 
+                                   name="telefono" 
+                                   max="999999999" 
+                                   required 
+                                   id="id_telefono" 
+                                   class="formulario__input" 
+                                   placeholder="987654321" 
+                                   value="{{ registroCli.telefono.value|default:'' }}">
+                        </div>
+                        {% if registroCli.telefono.errors %}
+                            {% for error in registroCli.telefono.errors %}
+                                <p class="formulario__input-error"><i class="fa-solid fa-circle-exclamation"></i> {{ error }}</p>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="form-row-custom">
+                    <!-- Contraseña -->
+                    <div class="formulario__grupo" id="grupo__password1">
+                        <label for="id_password1" class="formulario__label">Contraseña</label>
+                        <div class="formulario__grupo-input">
+                            <i class="formulario__icon fa-solid fa-lock"></i>
+                            <input type="password" 
+                                   name="password1" 
+                                   autocomplete="new-password" 
+                                   required 
+                                   id="id_password1" 
+                                   class="formulario__input" 
+                                   placeholder="••••••••">
+                        </div>
+                        {% if registroCli.password1.errors %}
+                            {% for error in registroCli.password1.errors %}
+                                <p class="formulario__input-error"><i class="fa-solid fa-circle-exclamation"></i> {{ error }}</p>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+
+                    <!-- Confirmar Contraseña -->
+                    <div class="formulario__grupo" id="grupo__password2">
+                        <label for="id_password2" class="formulario__label">Confirmar Contraseña</label>
+                        <div class="formulario__grupo-input">
+                            <i class="formulario__icon fa-solid fa-lock"></i>
+                            <input type="password" 
+                                   name="password2" 
+                                   autocomplete="new-password" 
+                                   required 
+                                   id="id_password2" 
+                                   class="formulario__input" 
+                                   placeholder="••••••••">
+                        </div>
+                        {% if registroCli.password2.errors %}
+                            {% for error in registroCli.password2.errors %}
+                                <p class="formulario__input-error"><i class="fa-solid fa-circle-exclamation"></i> {{ error }}</p>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="formulario__grupo-btn-enviar">
+                    <button type="submit" class="formulario__btn">
+                        Registrarse <i class="fa-solid fa-user-plus"></i>
                     </button>
                 </div>
-                <div class="cuentaExistente">
-                    <br>
-                    <a class="linkCuenta" href="{% url 'inicioSecion'%}">Ya tengo una cuenta</a>
-                </div>
-                <br>
             </form>
+
+            <div class="cuentaExistente">
+                <span>¿Ya tienes cuenta? </span>
+                <a class="linkCuenta" href="{% url 'inicioSecion' %}">Inicia sesión aquí</a>
+            </div>
         </div>
-    </div>
-</section>
-    <!-- segundo intento -->
+    </section>
+</div>
 {% endblock %}

@@ -1,43 +1,456 @@
 {% extends 'app/base.html' %}
 {% load static %}
 
-    <link rel="icon" href="{% static 'app/img/logo.png' %}">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+{% block navbar %}{% endblock %}
+{% block footer %}{% endblock %}
 
-	{% block js %}
-	<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.3/dist/jquery.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
-	<script src="{% static 'app/javaScript/registroScript.js'%}"></script>
-	{% endblock  %}
-
-
-{% block contenido%}
-{% load static %}
-    <!-- regristro -->
+{% block contenido %}
+<div class="registro-wrapper">
     <section class="form-register">
-        <div class="container">
-            <h2 class="text-center">Iniciar Sesión</h2>
-            <br>
-            <form action=" " class="needs-validation" novalidate method="POST">
-                {% csrf_token %}
-                <div class="form-goup col-md-7" style="margin-left:110px">
-                    {{login.as_p}}
+        <div class="form-container">
+            <h2 class="form-title">Iniciar Sesión</h2>
+            
+            {% if login.non_field_errors %}
+                <div class="formulario__alerta-global">
+                    {% for error in login.non_field_errors %}
+                        <p class="m-0"><i class="fa-solid fa-triangle-exclamation"></i> {{ error }}</p>
+                    {% endfor %}
                 </div>
-                <br>
-                <div class="d-flex align-items-center justify-content-center">
-                    <br>
-                    <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
-                        Iniciar Sesión
+            {% endif %}
+
+            <form action="" method="POST" novalidate>
+                {% csrf_token %}
+                
+                <!-- Campo de Usuario -->
+                <div class="formulario__grupo" id="grupo__usuario">
+                    <label for="id_username" class="formulario__label">Correo Electrónico</label>
+                    <div class="formulario__grupo-input">
+                        <i class="formulario__icon fa-solid fa-envelope"></i>
+                        <input type="text" 
+                               name="username" 
+                               autofocus 
+                               autocapitalize="none" 
+                               autocomplete="username" 
+                               maxlength="150" 
+                               required 
+                               id="id_username" 
+                               class="formulario__input" 
+                               placeholder="tu@correo.com" 
+                               value="{{ login.username.value|default:'' }}">
+                    </div>
+                    {% if login.username.errors %}
+                        {% for error in login.username.errors %}
+                            <p class="formulario__input-error"><i class="fa-solid fa-circle-exclamation"></i> {{ error }}</p>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+
+                <!-- Campo de Contraseña -->
+                <div class="formulario__grupo" id="grupo__password">
+                    <label for="id_password" class="formulario__label">Contraseña</label>
+                    <div class="formulario__grupo-input">
+                        <i class="formulario__icon fa-solid fa-lock"></i>
+                        <input type="password" 
+                               name="password" 
+                               autocomplete="current-password" 
+                               required 
+                               id="id_password" 
+                               class="formulario__input" 
+                               placeholder="••••••••">
+                        <button type="button" class="toggle-password" onclick="togglePassword('id_password', this)" aria-label="Mostrar/ocultar contraseña">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
+                    </div>
+                    {% if login.password.errors %}
+                        {% for error in login.password.errors %}
+                            <p class="formulario__input-error"><i class="fa-solid fa-circle-exclamation"></i> {{ error }}</p>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+
+                <!-- Olvidaste contraseña -->
+                <div class="forgot-password-link">
+                    <button type="button" id="btn-forgot-password" onclick="openResetModal()">
+                        ¿Olvidaste tu contraseña?
+                    </button>
+                </div>
+
+                <div class="formulario__grupo-btn-enviar">
+                    <button type="submit" class="formulario__btn" id="btn-login">
+                        <i class="fa-solid fa-right-to-bracket"></i>
+                        <span>Ingresar</span>
                     </button>
                 </div>
             </form>
-            <br>
+
             <div class="cuentaExistente">
-                <a class="linkCuenta" href="{% url 'RegistroUsuario'%}">Aún no tengo cuenta</a>
+                <span>¿Eres nuevo? </span>
+                <a class="linkCuenta" href="{% url 'RegistroUsuario' %}">Crea una cuenta aquí</a>
             </div>
         </div>
     </section>
-    {% comment %} <script src="{% url 'app/javaScript/registroScript.js'%}"></script> {% endcomment %}
-    <!-- finregistro -->
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     MODAL DE RECUPERACIÓN DE CONTRASEÑA (3 pasos)
+══════════════════════════════════════════════════ -->
+<div id="reset-modal-overlay" class="reset-modal-overlay" onclick="handleOverlayClick(event)">
+    <div class="reset-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        
+        <!-- Cabecera -->
+        <div class="reset-modal__header">
+            <div class="reset-modal__icon">
+                <i class="fa-solid fa-shield-halved"></i>
+            </div>
+            <button class="reset-modal__close" onclick="closeResetModal()" aria-label="Cerrar">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <!-- PASO 1: Ingresar correo -->
+        <div id="step-1" class="reset-step active">
+            <h3 id="modal-title" class="reset-modal__title">Recuperar Contraseña</h3>
+            <p class="reset-modal__subtitle">Ingresa tu correo y te enviaremos un código de verificación de 6 dígitos.</p>
+            
+            <div class="reset-form-group">
+                <label class="formulario__label">Correo Electrónico</label>
+                <div class="formulario__grupo-input">
+                    <i class="formulario__icon fa-solid fa-envelope"></i>
+                    <input type="email" id="reset-email" class="formulario__input" placeholder="tu@correo.com" autocomplete="email">
+                </div>
+                <p id="step1-error" class="reset-error" style="display:none;"></p>
+            </div>
+
+            <button class="formulario__btn reset-btn-full" id="btn-send-code" onclick="sendResetCode()">
+                <i class="fa-solid fa-paper-plane"></i>
+                <span>Enviar Código</span>
+            </button>
+        </div>
+
+        <!-- PASO 2: Verificar código OTP -->
+        <div id="step-2" class="reset-step">
+            <h3 class="reset-modal__title">Verificar Código</h3>
+            <p class="reset-modal__subtitle">Ingresa el código de 6 dígitos que enviamos a <strong id="reset-email-display"></strong></p>
+            
+            <div class="otp-container">
+                <input type="text" class="otp-input" maxlength="1" data-index="0" id="otp-0">
+                <input type="text" class="otp-input" maxlength="1" data-index="1" id="otp-1">
+                <input type="text" class="otp-input" maxlength="1" data-index="2" id="otp-2">
+                <input type="text" class="otp-input" maxlength="1" data-index="3" id="otp-3">
+                <input type="text" class="otp-input" maxlength="1" data-index="4" id="otp-4">
+                <input type="text" class="otp-input" maxlength="1" data-index="5" id="otp-5">
+            </div>
+            <p id="step2-error" class="reset-error" style="display:none;"></p>
+
+            <div class="reset-resend">
+                <span>¿No recibiste el código? </span>
+                <button type="button" class="reset-resend-btn" id="btn-resend" onclick="resendCode()">Reenviar</button>
+            </div>
+
+            <button class="formulario__btn reset-btn-full" id="btn-verify-code" onclick="verifyCode()">
+                <i class="fa-solid fa-check-circle"></i>
+                <span>Verificar Código</span>
+            </button>
+
+            <button type="button" class="reset-back-btn" onclick="goToStep(1)">
+                <i class="fa-solid fa-arrow-left"></i> Volver
+            </button>
+        </div>
+
+        <!-- PASO 3: Nueva contraseña -->
+        <div id="step-3" class="reset-step">
+            <h3 class="reset-modal__title">Nueva Contraseña</h3>
+            <p class="reset-modal__subtitle">Crea una contraseña segura de al menos 8 caracteres.</p>
+
+            <div class="reset-form-group">
+                <label class="formulario__label">Nueva Contraseña</label>
+                <div class="formulario__grupo-input">
+                    <i class="formulario__icon fa-solid fa-lock"></i>
+                    <input type="password" id="new-password1" class="formulario__input" placeholder="••••••••" autocomplete="new-password">
+                    <button type="button" class="toggle-password" onclick="togglePassword('new-password1', this)" aria-label="Mostrar/ocultar">
+                        <i class="fa-solid fa-eye"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="reset-form-group">
+                <label class="formulario__label">Confirmar Contraseña</label>
+                <div class="formulario__grupo-input">
+                    <i class="formulario__icon fa-solid fa-lock"></i>
+                    <input type="password" id="new-password2" class="formulario__input" placeholder="••••••••" autocomplete="new-password">
+                    <button type="button" class="toggle-password" onclick="togglePassword('new-password2', this)" aria-label="Mostrar/ocultar">
+                        <i class="fa-solid fa-eye"></i>
+                    </button>
+                </div>
+            </div>
+            <p id="step3-error" class="reset-error" style="display:none;"></p>
+
+            <button class="formulario__btn reset-btn-full" id="btn-reset-password" onclick="doResetPassword()">
+                <i class="fa-solid fa-key"></i>
+                <span>Actualizar Contraseña</span>
+            </button>
+        </div>
+
+        <!-- PASO 4: Éxito -->
+        <div id="step-4" class="reset-step">
+            <div class="reset-success">
+                <div class="reset-success__icon">
+                    <i class="fa-solid fa-circle-check"></i>
+                </div>
+                <h3 class="reset-modal__title">¡Listo!</h3>
+                <p class="reset-modal__subtitle">Tu contraseña ha sido actualizada correctamente. Ya puedes iniciar sesión.</p>
+                <button class="formulario__btn reset-btn-full" onclick="closeResetModal()">
+                    <i class="fa-solid fa-right-to-bracket"></i>
+                    <span>Ir al Login</span>
+                </button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+// ── CSRF helper ──────────────────────────────────────────────
+function getCsrf() {
+    return document.querySelector('[name=csrfmiddlewaretoken]').value;
+}
+
+// ── Toggle contraseña ────────────────────────────────────────
+function togglePassword(inputId, btn) {
+    const input = document.getElementById(inputId);
+    const icon = btn.querySelector('i');
+    if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.replace('fa-eye', 'fa-eye-slash');
+    } else {
+        input.type = 'password';
+        icon.classList.replace('fa-eye-slash', 'fa-eye');
+    }
+}
+
+// ── Modal ────────────────────────────────────────────────────
+function openResetModal() {
+    document.getElementById('reset-modal-overlay').classList.add('active');
+    document.body.style.overflow = 'hidden';
+    goToStep(1);
+    setTimeout(() => document.getElementById('reset-email').focus(), 300);
+}
+
+function closeResetModal() {
+    document.getElementById('reset-modal-overlay').classList.remove('active');
+    document.body.style.overflow = '';
+    // reset
+    document.getElementById('reset-email').value = '';
+    clearErrors();
+    clearOtp();
+    document.getElementById('new-password1').value = '';
+    document.getElementById('new-password2').value = '';
+}
+
+function handleOverlayClick(e) {
+    if (e.target === document.getElementById('reset-modal-overlay')) closeResetModal();
+}
+
+function goToStep(n) {
+    document.querySelectorAll('.reset-step').forEach(s => s.classList.remove('active'));
+    document.getElementById('step-' + n).classList.add('active');
+    clearErrors();
+}
+
+function clearErrors() {
+    document.querySelectorAll('.reset-error').forEach(el => {
+        el.style.display = 'none';
+        el.textContent = '';
+    });
+}
+
+function showError(elementId, msg) {
+    const el = document.getElementById(elementId);
+    el.textContent = msg;
+    el.style.display = 'flex';
+}
+
+function setLoading(btnId, loading) {
+    const btn = document.getElementById(btnId);
+    if (!btn) return;
+    btn.disabled = loading;
+    const icon = btn.querySelector('i');
+    const span = btn.querySelector('span');
+    if (loading) {
+        if (icon) icon.className = 'fa-solid fa-spinner fa-spin';
+        btn.style.opacity = '0.7';
+    } else {
+        btn.style.opacity = '';
+    }
+}
+
+// ── PASO 1: Enviar código ────────────────────────────────────
+function sendResetCode() {
+    const email = document.getElementById('reset-email').value.trim();
+    if (!email) { showError('step1-error', 'Por favor ingresa tu correo.'); return; }
+    
+    setLoading('btn-send-code', true);
+    
+    fetch("{% url 'request_password_reset' %}", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': getCsrf(),
+        },
+        body: 'email=' + encodeURIComponent(email)
+    })
+    .then(r => r.json())
+    .then(data => {
+        setLoading('btn-send-code', false);
+        // Restaurar ícono
+        document.querySelector('#btn-send-code i').className = 'fa-solid fa-paper-plane';
+        if (data.success) {
+            document.getElementById('reset-email-display').textContent = email;
+            goToStep(2);
+            setTimeout(() => document.getElementById('otp-0').focus(), 200);
+        } else {
+            showError('step1-error', data.error || 'Error inesperado.');
+        }
+    })
+    .catch(() => {
+        setLoading('btn-send-code', false);
+        document.querySelector('#btn-send-code i').className = 'fa-solid fa-paper-plane';
+        showError('step1-error', 'Error de conexión. Inténtalo de nuevo.');
+    });
+}
+
+// ── OTP inputs ───────────────────────────────────────────────
+function clearOtp() {
+    for (let i = 0; i < 6; i++) document.getElementById('otp-' + i).value = '';
+}
+
+function getOtpCode() {
+    let code = '';
+    for (let i = 0; i < 6; i++) code += document.getElementById('otp-' + i).value;
+    return code;
+}
+
+// Comportamiento de los inputs OTP
+document.addEventListener('DOMContentLoaded', () => {
+    const otpInputs = document.querySelectorAll('.otp-input');
+    otpInputs.forEach((input, idx) => {
+        input.addEventListener('input', (e) => {
+            const val = e.target.value.replace(/\D/g, '');
+            e.target.value = val.slice(-1);
+            if (val && idx < 5) otpInputs[idx + 1].focus();
+        });
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Backspace' && !e.target.value && idx > 0) {
+                otpInputs[idx - 1].focus();
+            }
+        });
+        input.addEventListener('paste', (e) => {
+            e.preventDefault();
+            const pasted = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '').slice(0, 6);
+            pasted.split('').forEach((ch, i) => {
+                if (otpInputs[idx + i]) otpInputs[idx + i].value = ch;
+            });
+            const next = Math.min(idx + pasted.length, 5);
+            otpInputs[next].focus();
+        });
+    });
+
+    // Enter en step-1 envía
+    document.getElementById('reset-email').addEventListener('keydown', e => {
+        if (e.key === 'Enter') sendResetCode();
+    });
+});
+
+// ── PASO 2: Verificar código ─────────────────────────────────
+function verifyCode() {
+    const code = getOtpCode();
+    if (code.length < 6) { showError('step2-error', 'Ingresa el código completo de 6 dígitos.'); return; }
+    
+    setLoading('btn-verify-code', true);
+    
+    fetch("{% url 'verify_reset_code' %}", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': getCsrf(),
+        },
+        body: 'code=' + encodeURIComponent(code)
+    })
+    .then(r => r.json())
+    .then(data => {
+        setLoading('btn-verify-code', false);
+        document.querySelector('#btn-verify-code i').className = 'fa-solid fa-check-circle';
+        if (data.success) {
+            goToStep(3);
+            setTimeout(() => document.getElementById('new-password1').focus(), 200);
+        } else {
+            showError('step2-error', data.error || 'Código incorrecto.');
+            clearOtp();
+            document.getElementById('otp-0').focus();
+        }
+    })
+    .catch(() => {
+        setLoading('btn-verify-code', false);
+        document.querySelector('#btn-verify-code i').className = 'fa-solid fa-check-circle';
+        showError('step2-error', 'Error de conexión. Inténtalo de nuevo.');
+    });
+}
+
+function resendCode() {
+    const btn = document.getElementById('btn-resend');
+    btn.disabled = true;
+    clearOtp();
+    clearErrors();
+    
+    const email = document.getElementById('reset-email').value.trim();
+    fetch("{% url 'request_password_reset' %}", {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'X-CSRFToken': getCsrf() },
+        body: 'email=' + encodeURIComponent(email)
+    }).then(() => {
+        setTimeout(() => { btn.disabled = false; }, 30000); // 30s cooldown
+        document.getElementById('otp-0').focus();
+    });
+}
+
+// ── PASO 3: Actualizar contraseña ────────────────────────────
+function doResetPassword() {
+    const p1 = document.getElementById('new-password1').value;
+    const p2 = document.getElementById('new-password2').value;
+    
+    if (!p1 || p1.length < 8) { showError('step3-error', 'La contraseña debe tener al menos 8 caracteres.'); return; }
+    if (p1 !== p2) { showError('step3-error', 'Las contraseñas no coinciden.'); return; }
+    
+    setLoading('btn-reset-password', true);
+    
+    fetch("{% url 'reset_password' %}", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': getCsrf(),
+        },
+        body: 'password1=' + encodeURIComponent(p1) + '&password2=' + encodeURIComponent(p2)
+    })
+    .then(r => r.json())
+    .then(data => {
+        setLoading('btn-reset-password', false);
+        document.querySelector('#btn-reset-password i').className = 'fa-solid fa-key';
+        if (data.success) {
+            goToStep(4);
+        } else {
+            showError('step3-error', data.error || 'Error al actualizar.');
+        }
+    })
+    .catch(() => {
+        setLoading('btn-reset-password', false);
+        document.querySelector('#btn-reset-password i').className = 'fa-solid fa-key';
+        showError('step3-error', 'Error de conexión. Inténtalo de nuevo.');
+    });
+}
+
+// Tecla Escape cierra modal
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeResetModal();
+});
+</script>
 {% endblock %}

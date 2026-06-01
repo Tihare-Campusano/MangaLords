@@ -30,6 +30,7 @@
 </head>
 <body>
     {% load static%}
+    {% block navbar %}
     <!-- barra de navegacio -->
     <input type="checkbox" class="responsivo" id="check">
     <nav class="barNav">
@@ -88,6 +89,7 @@
         </label>
     </nav>
     <!-- fin barra de navegacio -->
+    {% endblock %}
 
     <div id="contenido">
         {% block contenido%}
@@ -95,6 +97,7 @@
         {% endblock %}
     </div>
 
+{% block footer %}
         <!-- pie pagina -->
         <footer class="pie-pagina">
             <div class="grupo1">
@@ -114,7 +117,7 @@
                     </p>
                 </div>
                 <div class="boxS">
-                    <h2>SIGUENOS</h2>
+                    <h2>SÍGUENOS</h2>
                     <div class="redSocial">
                         <div class="r1">
                             <a href="#">
@@ -138,5 +141,6 @@
                 <small>&copy; 2023 <b>Manga Lords</b> - Todos los Derechos Reservados.</small>
             </div>
         </footer>
+{% endblock footer %}
     </body>
     </html>

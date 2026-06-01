@@ -142,3 +142,10 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Email backend (consola para desarrollo)
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+DEFAULT_FROM_EMAIL = 'MangaLords <noreply@mangalords.com>'
+
+# Tiempo de vida del código OTP (en segundos)
+PASSWORD_RESET_OTP_EXPIRY = 600  # 10 minutos
