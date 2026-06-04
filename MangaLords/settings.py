@@ -136,9 +136,8 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # lo que tiene que ver con la ruta de la imagen 
-MEDIA_ROOT = os.path.join(BASE_DIR,'')
+MEDIA_ROOT = os.path.join(BASE_DIR, '')
 MEDIA_URL = '/imagenes/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

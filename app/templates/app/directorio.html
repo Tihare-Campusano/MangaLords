@@ -10,18 +10,7 @@
 
 {% block contenido%}
 {% load static %}
-<style>
-    .imgD{
-        transition:all .5s ease-in-out;
-    }
-    .imgD:hover{
-        filter: blur(5px);
-        -webkit-transform: rotateY(180deg);
-        -webkit-transform-style: preserve-3d;
-        transform: rotateY(180deg);
-        transform-style: preserve-3d;
-    }
-</style>
+
     <!-- mangas vistas -->
     <div class="container py-5 containerM">
         {% if query %}
@@ -34,29 +23,30 @@
                 </a>
             </div>
         {% endif %}
-        <div class="row g-4">
+        <div class="row g-4 justify-content-center">
             {% for manga in mangas %}
-            <div id="manga" class="col-xs-8 col-sm-6 col-md-4">
-                <div id="manga2" class="card p-4 bg-body-tertiary" style="background-color: #dbdbdb; width: 350px; height: 600px;">
-                    <div id="manga3" class="card-body text-center">
-                        <h2 class="card-title text-center font-weight-bold" style="font-size: 27px;">{{ manga.titulo }}</h2>
-                        <p class="card-text text-center text-italic">{{ manga.editorial }}</p>
-                        <div id="imagenM" class="card-img-top mx-auto" style="width: 200px; display:block; height: 350px;">
+            <div id="manga" class="col-xs-12 col-sm-6 col-md-4 d-flex justify-content-center">
+                <div class="manga-card card p-4">
+                    <div class="card-body text-center d-flex flex-column align-items-center justify-content-between">
+                        <div>
+                            <h2 class="card-title text-center font-weight-bold">{{ manga.titulo }}</h2>
+                            <p class="card-text text-center text-italic">{{ manga.editorial }}</p>
+                        </div>
+                        <div class="manga-card-img-wrapper mx-auto">
                             <a href="{% url 'vistaManga' pk=manga.id %}">
-                                <img class="card-img-top mx-auto mt-3 mb-5 img-fluid img-thumbnail imgD" src={{ manga.imagen.url }} alt="card-image" style=" cursor:pinter;">
+                                <img class="img-fluid imgD" src="{{ manga.imagen.url }}" alt="{{ manga.titulo }}">
                             </a>
                         </div>
-                        <a href="{% url 'vistaManga' pk=manga.id %}" class="btn btn-warning d-inline-block">Ver Manga</a>
+                        <a href="{% url 'vistaManga' pk=manga.id %}" class="btn-ver-manga">Ver Manga</a>
                     </div>
                 </div>
-                <br>
             </div>
             {% endfor %}
         </div>
     </div>
     <!-- fin -->
     <!-- inicio seccion de generos -->
-    <section class="seccionGenero rounded" style="background-color: #fff; box-shadow: 2px 2px 30px rgba(0, 0, 0, 0.3);">
+    <section class="seccionGenero rounded">
         <br>
         <br>
         <div class="testimonio__header">
@@ -70,8 +60,8 @@
                     <img class="imagenG" src="{% static 'app/img/seinenG.png'%}" alt="">
                 </div>
                 <div class="descriptionG">
-                    <strong class="tituloG" style="color: rgb(25, 25, 25);">Seinen</strong>
-                    <p class="desc" style="color: #777777">Atrae a una audiencia masculina mayor de edad.</p>
+                    <strong class="tituloG">Seinen</strong>
+                    <p class="desc">Atrae a una audiencia masculina mayor de edad.</p>
                 </div>
             </div>
             <!-- caja 2 -->
@@ -80,8 +70,8 @@
                     <img class="imagenG" src="{% static 'app/img/shonenG.png'%}" alt="">
                 </div>
                 <div class="descriptionG">
-                    <strong class="tituloG" style="color: rgb(25, 25, 25);">Shōnen</strong>
-                    <p class="desc" style="color: #777777">Series con grandes dosis de acción.</p>
+                    <strong class="tituloG">Shōnen</strong>
+                    <p class="desc">Series con grandes dosis de acción.</p>
                 </div>
             </div>
             <!-- caja 3 -->
@@ -90,8 +80,8 @@
                     <img class="imagenG" src="{% static 'app/img/yuriG.png'%}" alt="">
                 </div>
                 <div class="descriptionG">
-                    <strong class="tituloG" style="color: rgb(25, 25, 25);">Yuri</strong>
-                    <p class="desc" style="color: #777777">También conocido como Girls’ Love, centra sus temáticas en las relaciones románticas entre dos personajes del sexo femenino.</p>
+                    <strong class="tituloG">Yuri</strong>
+                    <p class="desc">También conocido como Girls’ Love, centra sus temáticas en las relaciones románticas entre dos personajes del sexo femenino.</p>
                 </div>
             </div>
             <!-- caja 4 -->
@@ -100,8 +90,8 @@
                     <img class="imagenG" src="{% static 'app/img/shojoG.png'%}" alt="">
                 </div>
                 <div class="descriptionG">
-                    <strong class="tituloG" style="color: rgb(25, 25, 25);">Shojo</strong>
-                    <p class="desc" style="color: #777777">Va dirigido a chicas adolescentes.</p>
+                    <strong class="tituloG">Shojo</strong>
+                    <p class="desc">Va dirigido a chicas adolescentes.</p>
                 </div>
             </div>
             <!-- caja 5 -->
@@ -110,18 +100,18 @@
                     <img class="imagenG" src="{% static 'app/img/yaoiG.png'%}" alt="">
                 </div>
                 <div class="descriptionG">
-                    <strong class="tituloG" style="color: rgb(25, 25, 25);">Yaoi</strong>
-                    <p class="desc" style="color: #777777">También conocido como Boys’ Love, centra sus temáticas en las relaciones románticas entre dos personajes del sexo masculino</p>
+                    <strong class="tituloG">Yaoi</strong>
+                    <p class="desc">También conocido como Boys’ Love, centra sus temáticas en las relaciones románticas entre dos personajes del sexo masculino</p>
                 </div>
             </div>
             <!-- caja 6 -->
             <div class="seccionG_caja">
                 <div class="fotoGenero">
-                    <img class="imagenG" src="{% static 'app/img/jeseiG.png'%}"alt="">
+                    <img class="imagenG" src="{% static 'app/img/jeseiG.png'%}" alt="">
                 </div>
                 <div class="descriptionG">
-                    <strong class="tituloG" style="color: rgb(25, 25, 25);">Josei</strong>
-                    <p class="desc" style="color: #777777">Va dirigido especialmente para las mujeres adultas.</p>
+                    <strong class="tituloG">Josei</strong>
+                    <p class="desc">Va dirigido especialmente para las mujeres adultas.</p>
                 </div>
             </div>
         </div>
