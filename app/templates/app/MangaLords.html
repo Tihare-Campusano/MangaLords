@@ -50,37 +50,163 @@
     <!-- carrusel -->
     <!-- sobre nosotros -->
     <style>
+        .contenedor_gen {
+            background: rgba(18, 18, 22, 0.65) !important;
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(201, 26, 36, 0.35);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 15px rgba(201, 26, 36, 0.1);
+            color: #e2e2e7;
+            padding: 30px;
+        }
         .cube {
             width: 162px;
             height: 162px;
             cursor: pointer;
             display: inline-block;
+            border: 1px solid rgba(201, 26, 36, 0.25) !important;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #000;
+            transition: all 0.3s ease;
+            margin: 5px;
         }
-        .imgG{
-            transition:all .5s ease-in-out;
+        .cube:hover {
+            box-shadow: 0 0 15px rgba(255, 51, 68, 0.6);
+            border-color: #ff3344 !important;
+            transform: translateY(-3px);
         }
-        .imgG:hover{
-            filter: blur(5px);
+        .imgG {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease, filter 0.4s ease;
+        }
+        .cube:hover .imgG {
+            transform: scale(1.08);
+            filter: brightness(0.85) contrast(1.1);
+        }
+        .btn-generos {
+            display: inline-block;
+            background: linear-gradient(135deg, #8f0f15 0%, #c91a24 100%);
+            color: #fff !important;
+            font-family: 'Outfit', sans-serif;
+            font-size: 15px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 10px 28px;
+            border-radius: 25px;
+            text-decoration: none;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 4px 12px rgba(201, 26, 36, 0.3);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .btn-generos:hover {
+            background: linear-gradient(135deg, #c91a24 0%, #ff3344 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(255, 51, 68, 0.5), 0 0 8px rgba(255, 51, 68, 0.2);
+            text-decoration: none;
+        }
+
+        /* Estilos parte extra */
+        .seccionExtra {
+            display: flex;
+            margin-top: 4rem;
+            margin-bottom: 2rem;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            padding: 0 20px;
+        }
+        .contenedor.Sextra {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 25px;
+            max-width: 1200px;
+            width: 100%;
+        }
+        .Sextra_caja {
+            flex: 1 1 calc(33.333% - 20px);
+            min-width: 300px;
+            max-width: 360px;
+            background: rgba(18, 18, 22, 0.65) !important;
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(201, 26, 36, 0.35) !important;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 15px rgba(201, 26, 36, 0.05);
+            padding: 30px 25px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        .Sextra_caja:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.9), 0 0 20px rgba(255, 51, 68, 0.5);
+            border-color: #ff3344 !important;
+        }
+        .icon_extra .icono1 {
+            font-size: 48px;
+            color: #ff3344;
+            text-shadow: 0 0 10px rgba(255, 51, 68, 0.5);
+            transition: transform 0.3s ease;
+        }
+        .Sextra_caja:hover .icon_extra .icono1 {
+            transform: scale(1.1);
+        }
+        .Sextra_caja .tituloG {
+            font-family: 'Cinzel', serif;
+            font-size: 18px;
+            font-weight: 600;
+            color: #ffffff !important;
+            margin-top: 15px;
+            margin-bottom: 10px;
+            display: block;
+            text-align: center;
+        }
+        .Sextra_caja .desc {
+            font-family: 'Outfit', sans-serif;
+            font-size: 14px;
+            color: #a8a8b3 !important;
+            line-height: 1.5;
+            text-align: center;
+            display: block;
+            margin: 0;
+        }
+        @media screen and (max-width: 992px) {
+            .Sextra_caja {
+                flex: 1 1 calc(50% - 20px);
+            }
+        }
+        @media screen and (max-width: 600px) {
+            .Sextra_caja {
+                flex: 1 1 100%;
+            }
         }
     </style>
-    <div class="container contenedor_gen" style="background-color: #cfcbcb; border-radius:20px;">
+    <div class="container contenedor_gen" style="border-radius:20px;">
         <div class="row">
             <div class="col-md-6">
                 <br>
                 <br>
                 <div class="container">
                 <!-- Contenido del container izquierdo -->
-                    <h2 class="text-center" style="font-family: 'Times New Roman', Times, serif;">GÉNEROS</h2>
+                    <h2 class="text-center" style="font-family: 'Pirata One', 'Cinzel', serif; color: #ff3344; letter-spacing: 2px; font-size: 38px; text-shadow: 0 0 8px rgba(255, 51, 68, 0.5);">GÉNEROS</h2>
                     <br>
                     <div class="container">
-                        <p class="text-center font-weight-bold">¿Te gustaría explorar el maravilloso mundo de los Mangas?</p>
-                    <p class="text-center font-weight-bold">Aquí podrás encontrar los mejores mangas y con una gran variedad de géneros por descubrir
-                        , que te dejaran con la boca abierta.¿Estás dispuesto a sumergirte en este m, maravilloso mundo y explorar un mundo diferente?
-                    </p>
+                        <p class="text-center font-weight-bold" style="color: #e2e2e7; font-family: 'Outfit', sans-serif;">¿Te gustaría explorar el maravilloso mundo de los Mangas?</p>
+                        <p class="text-center" style="color: #a8a8b3; font-family: 'Outfit', sans-serif; font-size: 15px; line-height: 1.6;">
+                            Aquí podrás encontrar los mejores mangas y con una gran variedad de géneros por descubrir, que te dejarán con la boca abierta. ¿Estás dispuesto a sumergirte en este maravilloso mundo y explorar un universo diferente?
+                        </p>
                     </div>
                     <br>
                     <div class="d-flex justify-content-center">
-                        <a href="{% url 'directorio' %}" class="btn btn-warning d-inline-block">Ver Mangas</a>
+                        <a href="{% url 'directorio' %}" class="btn-generos">Ver Mangas</a>
                     </div>
                 </div>
                 <br>
@@ -93,32 +219,32 @@
                 <div class="container" style="padding: 3px 3px 3px 3px">
                     {% load static %}
                 <!-- Contenido del container derecho -->
-                    <ul class="list-inline">
-                        <li class="cube border">
+                    <ul class="list-inline d-flex flex-wrap justify-content-center">
+                        <li class="cube">
                             <span class="img_area">
                                 <span class="skin"></span>
-                                <img class="imgG" src="{% static 'app/img/iconYuri.jpg'%}" alt="" style="height: 162px; width: 162px">
+                                <img class="imgG" src="{% static 'app/img/iconYuri.jpg'%}" alt="">
                             </span>
                         </li>
-                        <li class="cube border">
+                        <li class="cube">
                             <span class="skin"></span>
-                            <img class="imgG" src="{% static 'app/img/yaoi.jpg'%}" alt="" style="height: 162px; width: 162px">
+                            <img class="imgG" src="{% static 'app/img/yaoi.jpg'%}" alt="">
                         </li>
-                        <li class="cube border">
+                        <li class="cube">
                             <span class="skin"></span>
-                            <img class="imgG" src="{% static 'app/img/romance.jpg'%}" alt="" style="height: 162px; width: 162px">
+                            <img class="imgG" src="{% static 'app/img/romance.jpg'%}" alt="">
                         </li>
-                        <li class="cube border">
+                        <li class="cube">
                             <span class="skin"></span>
-                            <img class="imgG" src="{% static 'app/img/gore.jpg'%}" alt="" style="height: 162px; width: 162px">
+                            <img class="imgG" src="{% static 'app/img/gore.jpg'%}" alt="">
                         </li>
-                        <li class="cube border">
+                        <li class="cube">
                             <span class="skin"></span>
-                            <img class="imgG" src="{% static 'app/img/Guts.jpeg'%}" alt="" style="height: 162px; width: 162px">
+                            <img class="imgG" src="{% static 'app/img/Guts.jpeg'%}" alt="">
                         </li>
-                        <li class="cube border">
+                        <li class="cube">
                             <span class="skin"></span>
-                            <img class="imgG" src="{% static 'app/img/goku.jpg'%}" alt="" style="height: 162px; width: 162px">
+                            <img class="imgG" src="{% static 'app/img/goku.jpg'%}" alt="">
                         </li>
                     </ul>
                 </div>
@@ -138,8 +264,8 @@
                     <i class="fa-sharp fa-solid fa-truck-fast icono1"></i>
                 </div>
                 <div class="descriptionG">
-                    <strong class="tituloG" style="color: rgb(25, 25, 25);">Envíos rápidos y seguros</strong>
-                    <p class="desc" style="color: #777777;  text-align: center;">Envíos rápidos y completamente seguros, llega en perfectas condiciones a tu hogar.</p>
+                    <strong class="tituloG">Envíos rápidos y seguros</strong>
+                    <p class="desc">Envíos rápidos y completamente seguros, llega en perfectas condiciones a tu hogar.</p>
                 </div>
             </div>
             <!-- caja 2 -->
@@ -148,8 +274,8 @@
                     <i class="fa-solid fa-headset icono1"></i>
                 </div>
                 <div class="descriptionG">
-                    <strong class="tituloG" style="color: rgb(25, 25, 25);">Atención al cliente</strong>
-                    <p class="desc" style="color: #777777,;">Lunes a Viernes de 10:00 AM a 19:00 PM</p>
+                    <strong class="tituloG">Atención al cliente</strong>
+                    <p class="desc">Lunes a Viernes de 10:00 AM a 19:00 PM</p>
                 </div>
             </div>
             <!-- caja 3 -->
@@ -158,8 +284,8 @@
                     <i class="fa-sharp fa-solid fa-handshake icono1"></i>
                 </div>
                 <div class="descriptionG">
-                    <strong class="tituloG" style="color: rgb(25, 25, 25);">Comprometidos con tu pedido</strong>
-                    <p class="desc" style="color: #777777;  text-align: center;">Pedido empacado completamente y en perfectas condiciones.</p>
+                    <strong class="tituloG">Comprometidos con tu pedido</strong>
+                    <p class="desc">Pedido empacado completamente y en perfectas condiciones.</p>
                 </div>
             </div>
             <!-- caja 4 -->
@@ -168,8 +294,8 @@
                     <i class="fa-solid fa-gifts icono1"></i>
                 </div>
                 <div class="descriptionG">
-                    <strong class="tituloG" style="color: rgb(25, 25, 25);">Beneficios por ser cliente</strong>
-                    <p class="desc" style="color: #777777;  text-align: center;">Entre más compras, más oportunidad de ganar premios.</p>
+                    <strong class="tituloG">Beneficios por ser cliente</strong>
+                    <p class="desc">Entre más compras, más oportunidad de ganar premios.</p>
                 </div>
             </div>
         </div>

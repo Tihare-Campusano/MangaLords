@@ -24,8 +24,15 @@ def admin(request):
 
 
 def directorio(request):
-    mangas = Manga.objects.all()
-    return render(request,'app/directorio.html',{'mangas': mangas})
+    from django.db.models import Q
+    query = request.GET.get('q', '').strip()
+    if query:
+        mangas = Manga.objects.filter(
+            Q(titulo__icontains=query) | Q(editorial__icontains=query)
+        )
+    else:
+        mangas = Manga.objects.all()
+    return render(request,'app/directorio.html',{'mangas': mangas, 'query': query})
 
 def inicioSecion(request):
     form = AuthenticationForm()
@@ -275,4 +282,25 @@ def reset_password(request):
     for key in ['pwd_reset_otp', 'pwd_reset_otp_expiry', 'pwd_reset_email', 'pwd_reset_verified']:
         request.session.pop(key, None)
     
-    return JsonResponse({'success': True, 'message': '¡Contraseña actualizada correctamente!'})
+    return JsonResponse({'success': True, 'message': '¡Contraseña actualizada correctamente!'})
+
+
+def search_suggestions(request):
+    from django.http import JsonResponse
+    from django.db.models import Q
+    
+    query = request.GET.get('q', '').strip()
+    if len(query) >= 1:
+        mangas = Manga.objects.filter(
+            Q(titulo__icontains=query) | Q(editorial__icontains=query)
+        )[:6]
+        results = []
+        for m in mangas:
+            results.append({
+                'id': m.id,
+                'titulo': m.titulo,
+                'editorial': m.editorial,
+                'imagen_url': m.imagen.url if m.imagen else '',
+            })
+        return JsonResponse({'success': True, 'results': results})
+    return JsonResponse({'success': True, 'results': []})

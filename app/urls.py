@@ -2,7 +2,8 @@ from django.urls import path
 from .views import (MangaLords, carrito, directorio, inicioSecion, pagar, Registro,
                     contacto, vistaManga, agregar_producto, listar_productos,
                     modificar_manga, eliminar_producto, admin, cerrarSesion,
-                    request_password_reset, verify_reset_code, reset_password)
+                    request_password_reset, verify_reset_code, reset_password,
+                    search_suggestions)
 
 # imagenes
 from django.conf import settings
@@ -24,6 +25,9 @@ urlpatterns = [
     path('password-reset/request/', request_password_reset, name='request_password_reset'),
     path('password-reset/verify/', verify_reset_code, name='verify_reset_code'),
     path('password-reset/reset/', reset_password, name='reset_password'),
+    
+    # Autocomplete suggestions
+    path('buscar-sugerencias/', search_suggestions, name='search_suggestions'),
     
     #crud
     path('agregar_producto/', agregar_producto, name="agregar_producto"),    

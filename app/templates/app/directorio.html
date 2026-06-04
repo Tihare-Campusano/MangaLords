@@ -24,6 +24,16 @@
 </style>
     <!-- mangas vistas -->
     <div class="container py-5 containerM">
+        {% if query %}
+            <div class="text-center mb-5">
+                <h2 style="font-family: 'Cinzel', serif; color: #ff3344; text-shadow: 0 0 8px rgba(255, 51, 68, 0.4); font-size: 26px;">
+                    Resultados de búsqueda para: "{{ query }}"
+                </h2>
+                <a href="{% url 'directorio' %}" class="btn btn-outline-danger btn-sm mt-2" style="border-radius: 20px; font-family: 'Outfit', sans-serif;">
+                    Limpiar Búsqueda
+                </a>
+            </div>
+        {% endif %}
         <div class="row g-4">
             {% for manga in mangas %}
             <div id="manga" class="col-xs-8 col-sm-6 col-md-4">
