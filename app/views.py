@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import Manga, RegistroUsuario
 from .registroCli import registroClient
 from django.contrib.auth import authenticate, login, logout
-from .forms import CrudForm, ContactoForm
+from .forms import CrudForm, ContactoForm, PerfilForm
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
@@ -207,6 +207,38 @@ def eliminar_producto(request, id):
 
 def carrito(request):
     return render(request,'app/carrito.html')
+
+
+@login_required
+def perfil(request):
+    registro, created = RegistroUsuario.objects.get_or_create(
+        user=request.user,
+        defaults={
+            'nombres': request.user.first_name or request.user.username,
+            'apellidos': request.user.last_name or '',
+            'email': request.user.email or '',
+            'telefono': 999999999
+        }
+    )
+    
+    mensaje = None
+    
+    if request.method == 'POST':
+        form = PerfilForm(request.POST, instance=registro, user=request.user)
+        if form.is_valid():
+            registro = form.save()
+            
+            user = request.user
+            user.first_name = registro.nombres
+            user.last_name = registro.apellidos
+            user.email = registro.email
+            user.save()
+            
+            mensaje = "Tu perfil ha sido actualizado con éxito."
+    else:
+        form = PerfilForm(instance=registro, user=request.user)
+        
+    return render(request, 'app/perfil.html', {'form': form, 'mensaje': mensaje})
 
 
 # ─── PASSWORD RESET OTP ────────────────────────────────────────────────────────

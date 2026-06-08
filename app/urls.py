@@ -3,7 +3,7 @@ from .views import (MangaLords, carrito, directorio, inicioSecion, pagar, Regist
                     contacto, vistaManga, agregar_producto, listar_productos,
                     modificar_manga, eliminar_producto, admin, cerrarSesion,
                     request_password_reset, verify_reset_code, reset_password,
-                    search_suggestions)
+                    search_suggestions, perfil)
 
 # imagenes
 from django.conf import settings
@@ -20,6 +20,8 @@ urlpatterns = [
     path('contacto/',contacto, name='contacto'),
     path('vistaManga/<str:pk>',vistaManga, name='vistaManga'),
     path('cerrarSesion/',cerrarSesion, name='cerrarSesion'),
+    path('perfil/', perfil, name='perfil'),
+
     
     # Password reset OTP
     path('password-reset/request/', request_password_reset, name='request_password_reset'),

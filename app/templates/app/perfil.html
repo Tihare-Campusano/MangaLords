@@ -1,0 +1,137 @@
+{% extends 'app/base.html' %}
+{% load static %}
+
+{% block contenido %}
+<div class="registro-wrapper">
+    <section class="form-register">
+        <div class="form-container">
+            <h2 class="form-title">Mi Perfil</h2>
+            
+            {% if form.non_field_errors %}
+                <div class="formulario__alerta-global">
+                    {% for error in form.non_field_errors %}
+                        <p class="m-0"><i class="fa-solid fa-triangle-exclamation"></i> {{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {% if mensaje %}
+                <div class="alert alert-success text-center" style="background: rgba(40, 184, 125, 0.15); border: 1px solid rgba(40, 184, 125, 0.4); color: #28b87d; border-radius: 8px; padding: 12px; margin-bottom: 20px;">
+                    <i class="fa-solid fa-circle-check"></i> {{ mensaje }}
+                </div>
+            {% endif %}
+
+            <!-- Botones/Indicadores de Rol -->
+            <div class="text-center mb-4" style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 10px;">
+                <span class="d-block text-muted" style="font-size: 13px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;">Tipo de Cuenta</span>
+                {% if user.is_staff %}
+                    <span style="font-size: 18px; color: #ff3344; font-weight: 700; text-shadow: 0 0 10px rgba(255, 51, 68, 0.3);"><i class="fa-solid fa-shield-halved"></i> Administrador</span>
+                {% else %}
+                    <span style="font-size: 18px; color: #5488a3; font-weight: 700; text-shadow: 0 0 10px rgba(84, 136, 163, 0.3);"><i class="fa-solid fa-user"></i> Usuario Registrado</span>
+                {% endif %}
+            </div>
+
+            <form action="" method="POST" novalidate>
+                {% csrf_token %}
+                
+                <div class="form-row-custom">
+                    <!-- Nombres -->
+                    <div class="formulario__grupo" id="grupo__nombres">
+                        <label for="id_nombres" class="formulario__label">Nombres</label>
+                        <div class="formulario__grupo-input">
+                            <i class="formulario__icon fa-solid fa-user"></i>
+                            <input type="text" 
+                                   name="nombres" 
+                                   maxlength="500" 
+                                   required 
+                                   id="id_nombres" 
+                                   class="formulario__input" 
+                                   placeholder="Juan" 
+                                   value="{{ form.nombres.value|default:'' }}">
+                        </div>
+                        {% if form.nombres.errors %}
+                            {% for error in form.nombres.errors %}
+                                <p class="formulario__input-error" style="display:block;"><i class="fa-solid fa-circle-exclamation"></i> {{ error }}</p>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+
+                    <!-- Apellidos -->
+                    <div class="formulario__grupo" id="grupo__apellidos">
+                        <label for="id_apellidos" class="formulario__label">Apellidos</label>
+                        <div class="formulario__grupo-input">
+                            <i class="formulario__icon fa-solid fa-user"></i>
+                            <input type="text" 
+                                   name="apellidos" 
+                                   maxlength="500" 
+                                   required 
+                                   id="id_apellidos" 
+                                   class="formulario__input" 
+                                   placeholder="Pérez" 
+                                   value="{{ form.apellidos.value|default:'' }}">
+                        </div>
+                        {% if form.apellidos.errors %}
+                            {% for error in form.apellidos.errors %}
+                                <p class="formulario__input-error" style="display:block;"><i class="fa-solid fa-circle-exclamation"></i> {{ error }}</p>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="form-row-custom">
+                    <!-- Email -->
+                    <div class="formulario__grupo" id="grupo__email">
+                        <label for="id_email" class="formulario__label">Correo Electrónico</label>
+                        <div class="formulario__grupo-input">
+                            <i class="formulario__icon fa-solid fa-envelope"></i>
+                            <input type="email" 
+                                   name="email" 
+                                   required 
+                                   id="id_email" 
+                                   class="formulario__input" 
+                                   placeholder="juan.perez@correo.com" 
+                                   value="{{ form.email.value|default:'' }}">
+                        </div>
+                        {% if form.email.errors %}
+                            {% for error in form.email.errors %}
+                                <p class="formulario__input-error" style="display:block;"><i class="fa-solid fa-circle-exclamation"></i> {{ error }}</p>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+
+                    <!-- Telefono -->
+                    <div class="formulario__grupo" id="grupo__telefono">
+                        <label for="id_telefono" class="formulario__label">Teléfono</label>
+                        <div class="formulario__grupo-input">
+                            <i class="formulario__icon fa-solid fa-phone"></i>
+                            <input type="text" 
+                                   name="telefono" 
+                                   maxlength="9" 
+                                   required 
+                                   id="id_telefono" 
+                                   class="formulario__input" 
+                                   placeholder="987654321" 
+                                   value="{{ form.telefono.value|default:'' }}">
+                        </div>
+                        {% if form.telefono.errors %}
+                            {% for error in form.telefono.errors %}
+                                <p class="formulario__input-error" style="display:block;"><i class="fa-solid fa-circle-exclamation"></i> {{ error }}</p>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="formulario__grupo-btn-enviar d-flex justify-content-between align-items-center mt-4" style="gap: 15px;">
+                    <a href="{% url 'MangaLords' %}" class="btn btn-secondary btn-volver-perfil" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; padding: 12px 24px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s ease; text-decoration: none; width: 45%; text-align: center;">
+                        <i class="fa-solid fa-arrow-left-long"></i> Volver
+                    </a>
+                    
+                    <button type="submit" class="formulario__btn" style="width: 50%; margin: 0; display: inline-flex; align-items: center; justify-content: center; gap: 8px;">
+                        Guardar <i class="fa-solid fa-floppy-disk"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </section>
+</div>
+{% endblock %}

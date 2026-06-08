@@ -23,6 +23,172 @@
     <link rel="stylesheet" href="{% static 'app/vistas/vistasStilo.css' %}">
     {% endblock  %}
 
+    <!-- Estilos en línea del perfil para evitar problemas de caché estática -->
+    <style>
+    .header-profile-container {
+        position: relative;
+        cursor: pointer;
+        display: inline-block;
+        z-index: 1010;
+    }
+
+    .header-profile-trigger {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .profile-avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #185e83, #1e7aa8);
+        color: #ffffff;
+        font-size: 20px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid rgba(84, 136, 163, 0.5);
+        box-shadow: 0 0 10px rgba(84, 136, 163, 0.3), inset 0 0 5px rgba(255, 255, 255, 0.2);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    }
+
+    .header-profile-container:hover .profile-avatar {
+        transform: scale(1.08);
+        border-color: #5488a3;
+        box-shadow: 0 0 15px rgba(84, 136, 163, 0.8), 0 0 3px rgba(84, 136, 163, 0.5);
+    }
+
+    .profile-dropdown {
+        position: absolute;
+        top: calc(100% + 12px);
+        left: 0;
+        width: 260px;
+        background: rgba(13, 13, 17, 0.95);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(84, 136, 163, 0.3);
+        border-radius: 12px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8), 0 0 15px rgba(84, 136, 163, 0.15);
+        padding: 18px 0;
+        display: flex;
+        flex-direction: column;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-10px);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Mostrar menú al tener la clase active */
+    .header-profile-container.active .profile-dropdown {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+
+    .dropdown-header {
+        padding: 0 20px 12px 20px;
+        text-align: left;
+    }
+
+    .dropdown-username {
+        font-size: 15px;
+        font-weight: 600;
+        color: #ffffff;
+        margin: 0 0 6px 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .dropdown-header .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 5px 10px;
+        font-size: 11px;
+        font-weight: 600;
+        border-radius: 20px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .badge-admin {
+        background: rgba(201, 26, 36, 0.15);
+        color: #ff3344;
+        border: 1px solid rgba(201, 26, 36, 0.35);
+        box-shadow: 0 0 8px rgba(201, 26, 36, 0.1);
+    }
+
+    .badge-user {
+        background: rgba(84, 136, 163, 0.15);
+        color: #5488a3;
+        border: 1px solid rgba(84, 136, 163, 0.35);
+        box-shadow: 0 0 8px rgba(84, 136, 163, 0.1);
+    }
+
+    .dropdown-divider {
+        height: 1px;
+        background: rgba(255, 255, 255, 0.07);
+        margin: 8px 0;
+        width: 100%;
+    }
+
+    .dropdown-item-link {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 20px;
+        color: #b2c0cc !important;
+        text-decoration: none !important;
+        font-size: 14px;
+        font-weight: 500;
+        text-align: left;
+        transition: all 0.2s ease;
+    }
+
+    .dropdown-item-link i {
+        font-size: 16px;
+        width: 18px;
+        text-align: center;
+        color: #718096;
+        transition: color 0.2s ease;
+    }
+
+    .dropdown-item-link:hover {
+        background: rgba(84, 136, 163, 0.12);
+        color: #ffffff !important;
+        padding-left: 24px;
+    }
+
+    .dropdown-item-link:hover i {
+        color: #5488a3;
+    }
+
+    .logout-link:hover {
+        background: rgba(201, 26, 36, 0.12);
+        color: #ff3344 !important;
+    }
+
+    .logout-link:hover i {
+        color: #ff3344;
+    }
+
+    /* Adaptación responsiva */
+    @media screen and (max-width: 1024px) {
+        .barNav .header-profile-container {
+            order: 1;
+        }
+        .profile-dropdown {
+            left: 0;
+            top: calc(100% + 15px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.9);
+        }
+    }
+    </style>
+
     {% block js %}
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.3/dist/jquery.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
@@ -37,12 +203,40 @@
     <!-- barra de navegacio -->
     <input type="checkbox" class="responsivo" id="check">
     <nav class="barNav">
-        <!-- logo -->
-        <div class="logo">
-            <a href="{% url 'MangaLords'%}">
-                <img src="{% static 'app/img/logo.png'%}" alt="logo">
-            </a>
-        </div>
+        <!-- logo/perfil -->
+        {% if user.is_authenticated %}
+            <div class="header-profile-container">
+                <div class="header-profile-trigger" id="profileTrigger">
+                    <div class="profile-avatar">
+                        {{ user.first_name|slice:":1"|upper|default:user.username|slice:":1"|upper }}
+                    </div>
+                </div>
+                <div class="profile-dropdown">
+                    <div class="dropdown-header">
+                        <p class="dropdown-username">{{ user.first_name|default:user.username }} {{ user.last_name }}</p>
+                        {% if user.is_staff %}
+                            <span class="badge badge-admin"><i class="fa-solid fa-shield-halved"></i> Administrador 🛡️</span>
+                        {% else %}
+                            <span class="badge badge-user"><i class="fa-solid fa-user"></i> Usuario 👤</span>
+                        {% endif %}
+                    </div>
+                    <div class="dropdown-divider"></div>
+                    <a href="{% url 'perfil' %}" class="dropdown-item-link"><i class="fa-solid fa-user-gear"></i> Mi Perfil</a>
+                    {% if user.is_staff %}
+                        <a href="{% url 'agregar_producto' %}" class="dropdown-item-link"><i class="fa-solid fa-screwdriver-wrench"></i> Administración</a>
+                    {% endif %}
+                    <a href="{% url 'MangaLords' %}" class="dropdown-item-link"><i class="fa-solid fa-house"></i> Inicio</a>
+                    <div class="dropdown-divider"></div>
+                    <a href="{% url 'cerrarSesion' %}" class="dropdown-item-link logout-link"><i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesión</a>
+                </div>
+            </div>
+        {% else %}
+            <div class="logo">
+                <a href="{% url 'MangaLords'%}">
+                    <img src="{% static 'app/img/logo.png'%}" alt="logo">
+                </a>
+            </div>
+        {% endif %}
         <!-- barra busqueda -->
         <form class="search_box" action="{% url 'directorio' %}" method="GET" style="position: relative;">
             <input type="search" name="q" id="search-input" placeholder="Buscar mangas..." autocomplete="off">
@@ -52,14 +246,10 @@
         <!-- seccion de opciones -->
         <ol>
             <li><a href="{% url 'MangaLords'%}">Inicio</a></li>
-            {% if user.is_staff == 1 %}
-                <li><a href="{% url 'agregar_producto' %}">ADMIN</a></li>
-            {% endif %}
             
             {% if user.is_authenticated %}
                 <li><a href="{% url 'directorio'%}">Directorio</a></li>
                 <li><a href="{% url 'contacto'%}">Contáctanos</a></li>
-                <li><a href="{% url 'cerrarSesion'%}">Cerrar Sesión</a></li>
                 <li>
                     <!--Boton Compra-->
                     <div class="boton-modal">
@@ -220,6 +410,22 @@
                 suggestionsBox.style.display = 'block';
             }
         });
+
+        // Toggle del menú de perfil al hacer click
+        const profileTrigger = document.getElementById('profileTrigger');
+        const profileContainer = document.querySelector('.header-profile-container');
+        if (profileTrigger && profileContainer) {
+            profileTrigger.addEventListener('click', (e) => {
+                e.stopPropagation();
+                profileContainer.classList.toggle('active');
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!profileContainer.contains(e.target)) {
+                    profileContainer.classList.remove('active');
+                }
+            });
+        }
     });
     </script>
     </body>
