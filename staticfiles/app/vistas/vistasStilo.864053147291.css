@@ -1,0 +1,132 @@
+/* configuracion de fondo inicio */
+body {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.9)), url("../img/fondo2.d1f094119071.jpg");
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+    min-height: 100vh;
+    font-family: 'Outfit', sans-serif;
+    color: #e2e2e7;
+}
+/* configuracion de fondo fin */
+
+/* Tarjeta del detalle de manga */
+.manga-detail-card {
+    background: rgba(18, 18, 22, 0.65) !important;
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(201, 26, 36, 0.35) !important;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 15px rgba(201, 26, 36, 0.05);
+    color: #e2e2e7;
+    margin-top: 20px;
+    overflow: hidden;
+}
+
+/* Contenedor de la portada */
+.manga-detail-img-wrapper {
+    width: 260px;
+    height: 380px;
+    overflow: hidden;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.7);
+    background: #000;
+}
+
+.manga-detail-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.manga-detail-img:hover {
+    transform: scale(1.04);
+}
+
+/* Título */
+.manga-detail-title {
+    font-family: 'Cinzel', serif;
+    font-size: 32px;
+    font-weight: 700;
+    color: #ffffff;
+    text-shadow: 0 0 8px rgba(255, 51, 68, 0.4);
+}
+
+/* Fila de información */
+.manga-info-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.manga-info-row {
+    display: flex;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding-bottom: 10px;
+    align-items: center;
+}
+
+.manga-info-row.desc-row {
+    flex-direction: column;
+    align-items: flex-start;
+    border-bottom: none;
+}
+
+.manga-info-label {
+    width: 150px;
+    font-family: 'Cinzel', serif;
+    font-size: 14px;
+    letter-spacing: 1px;
+    color: #ff3344;
+    text-shadow: 0 0 4px rgba(255, 51, 68, 0.2);
+    font-weight: 600;
+}
+
+.manga-info-value {
+    font-family: 'Outfit', sans-serif;
+    font-size: 16px;
+    color: #e2e2e7;
+}
+
+.manga-info-value.price-tag {
+    color: #ff3344;
+    font-weight: 700;
+    font-size: 18px;
+    text-shadow: 0 0 6px rgba(255, 51, 68, 0.3);
+}
+
+.desc-text {
+    margin-top: 8px;
+    line-height: 1.6;
+    color: #a8a8b3;
+    font-style: italic;
+}
+
+/* Botón volver */
+.btn-volver-manga {
+    display: inline-flex;
+    align-items: center;
+    background: linear-gradient(135deg, #8f0f15 0%, #c91a24 100%);
+    color: #fff !important;
+    font-family: 'Outfit', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 10px 24px;
+    border-radius: 20px;
+    text-decoration: none;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 4px 10px rgba(201, 26, 36, 0.3);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-volver-manga:hover {
+    background: linear-gradient(135deg, #c91a24 0%, #ff3344 100%);
+    transform: translateX(-4px);
+    box-shadow: 0 6px 15px rgba(255, 51, 68, 0.5), 0 0 8px rgba(255, 51, 68, 0.2);
+    text-decoration: none;
+}

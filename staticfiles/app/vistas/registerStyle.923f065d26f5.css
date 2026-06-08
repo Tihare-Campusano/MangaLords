@@ -1,0 +1,610 @@
+/* Configuración de fondo con superposición oscura para mejor legibilidad */
+body {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.75)), url("../img/fondo5.1f83b4f1ad6f.jpg");
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+    min-height: 100vh;
+}
+
+/* Envoltorio principal para centrar el formulario */
+.registro-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 40px 20px;
+    width: 100%;
+}
+
+/* Caja de registro/login estilo Glassmorphism */
+.form-register {
+    width: 100%;
+    max-width: 480px;
+    background: rgba(18, 18, 22, 0.88);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border: 1px solid rgba(84, 136, 163, 0.3);
+    border-radius: 18px;
+    padding: 44px 38px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255,255,255,0.04) inset;
+    margin: 40px auto;
+    color: #ffffff;
+    transition: max-width 0.3s ease;
+}
+
+/* Adaptación del tamaño para el registro */
+.registro-wrapper:has(#grupo__nombres) .form-register {
+    max-width: 780px;
+}
+
+.form-container {
+    width: 100%;
+}
+
+/* Título estilizado de MangaLords */
+.form-title {
+    font-size: 28px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 30px;
+    color: #ffffff;
+    letter-spacing: 1px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    border-bottom: 2px solid #5488a3;
+    padding-bottom: 12px;
+}
+
+/* Fila de campos personalizados para registro (soporte grid en pantallas grandes) */
+.form-row-custom {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.form-row-custom .formulario__grupo {
+    flex: 1 1 calc(50% - 10px);
+    min-width: 250px;
+}
+
+/* Grupos de formularios */
+.formulario__grupo {
+    margin-bottom: 22px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Etiquetas */
+.formulario__label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #b2c0cc;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.formulario__grupo:hover .formulario__label {
+    color: #5488a3;
+}
+
+/* Contenedor de inputs con ícono */
+.formulario__grupo-input {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+/* Íconos de FontAwesome */
+.formulario__icon {
+    position: absolute;
+    left: 15px;
+    color: #718096;
+    font-size: 16px;
+    transition: color 0.3s ease;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Inputs de texto/contraseña */
+.formulario__input {
+    width: 100%;
+    height: 48px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 8px;
+    padding: 0 48px 0 45px;
+    color: #ffffff;
+    font-size: 15px;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+.formulario__input::placeholder {
+    color: #5d6d7e;
+}
+
+.formulario__input:focus {
+    outline: none;
+    border-color: #5488a3;
+    background: rgba(255, 255, 255, 0.09);
+    box-shadow: 0 0 12px rgba(84, 136, 163, 0.45);
+}
+
+.formulario__grupo-input:focus-within .formulario__icon {
+    color: #5488a3;
+}
+
+/* Botón toggle visibilidad contraseña */
+.toggle-password {
+    position: absolute;
+    right: 14px;
+    background: none;
+    border: none;
+    color: #718096;
+    cursor: pointer;
+    font-size: 15px;
+    padding: 4px;
+    transition: color 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.toggle-password:hover {
+    color: #5488a3;
+}
+
+/* Estilos de errores por campo */
+.formulario__input-error {
+    font-size: 13px;
+    color: #fc8181;
+    margin-top: 6px;
+    margin-bottom: 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    animation: fadeIn 0.3s ease forwards;
+}
+
+/* Alerta global superior */
+.formulario__alerta-global {
+    background: rgba(254, 178, 178, 0.12);
+    border-left: 4px solid #fc8181;
+    color: #feb2b2;
+    padding: 14px 18px;
+    border-radius: 6px;
+    margin-bottom: 25px;
+    font-size: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    animation: fadeIn 0.3s ease forwards;
+}
+
+/* ── Olvidaste tu contraseña ── */
+.forgot-password-link {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: -10px;
+    margin-bottom: 16px;
+}
+
+.forgot-password-link button {
+    background: none;
+    border: none;
+    color: #5488a3;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0;
+    transition: color 0.3s ease;
+    text-decoration: none;
+}
+
+.forgot-password-link button:hover {
+    color: #90cdf4;
+    text-decoration: underline;
+}
+
+/* ── Botones de envío ──────────────────────────────────────── */
+.formulario__grupo-btn-enviar {
+    margin-top: 24px;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+/* FIX: botón alineado, ícono y texto siempre dentro */
+.formulario__btn {
+    height: 50px;
+    padding: 0 36px;
+    background: linear-gradient(135deg, #185e83, #1e7aa8);
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    box-shadow: 0 4px 15px rgba(24, 94, 131, 0.4);
+    white-space: nowrap;
+    line-height: 1;
+    text-decoration: none;
+    min-width: 160px;
+}
+
+.formulario__btn i {
+    font-size: 16px;
+    flex-shrink: 0;
+    line-height: 1;
+}
+
+.formulario__btn span {
+    line-height: 1;
+}
+
+.formulario__btn:hover {
+    background: linear-gradient(135deg, #5488a3, #64a8cc);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(84, 136, 163, 0.55);
+}
+
+.formulario__btn:active {
+    transform: translateY(0);
+}
+
+.formulario__btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* ── Botón de ancho completo (modal) ── */
+.reset-btn-full {
+    width: 100%;
+    margin-top: 8px;
+    padding: 0 20px;
+}
+
+/* ── Enlaces y redirecciones ── */
+.cuentaExistente {
+    margin-top: 30px;
+    text-align: center;
+    font-size: 14px;
+    color: #a0aec0;
+}
+
+.linkCuenta {
+    color: #5488a3;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+    display: inline-block;
+    margin-left: 4px;
+}
+
+.linkCuenta:hover {
+    color: #90cdf4;
+    text-decoration: underline;
+}
+
+/* ══════════════════════════════════════════════════
+   MODAL DE RECUPERACIÓN DE CONTRASEÑA
+══════════════════════════════════════════════════ */
+
+.reset-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.reset-modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.reset-modal {
+    width: 100%;
+    max-width: 440px;
+    background: rgba(14, 14, 20, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(84, 136, 163, 0.35);
+    border-radius: 18px;
+    padding: 36px 32px 32px;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255,255,255,0.05) inset;
+    color: #ffffff;
+    transform: translateY(20px) scale(0.97);
+    transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+}
+
+.reset-modal-overlay.active .reset-modal {
+    transform: translateY(0) scale(1);
+}
+
+/* Cabecera del modal */
+.reset-modal__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.reset-modal__icon {
+    width: 52px;
+    height: 52px;
+    background: linear-gradient(135deg, rgba(84, 136, 163, 0.25), rgba(84, 136, 163, 0.1));
+    border: 1px solid rgba(84, 136, 163, 0.4);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #5488a3;
+    font-size: 22px;
+}
+
+.reset-modal__close {
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 8px;
+    color: #a0aec0;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    font-size: 15px;
+}
+
+.reset-modal__close:hover {
+    background: rgba(252, 129, 129, 0.15);
+    border-color: rgba(252, 129, 129, 0.4);
+    color: #fc8181;
+}
+
+.reset-modal__title {
+    font-size: 22px;
+    font-weight: 700;
+    margin: 0 0 8px 0;
+    color: #ffffff;
+    letter-spacing: 0.3px;
+}
+
+.reset-modal__subtitle {
+    font-size: 14px;
+    color: #a0aec0;
+    margin: 0 0 24px 0;
+    line-height: 1.5;
+}
+
+.reset-modal__subtitle strong {
+    color: #5488a3;
+}
+
+/* Pasos del modal */
+.reset-step {
+    display: none;
+    animation: fadeIn 0.3s ease forwards;
+}
+
+.reset-step.active {
+    display: block;
+}
+
+.reset-form-group {
+    margin-bottom: 18px;
+}
+
+/* Mensajes de error en modal */
+.reset-error {
+    font-size: 13px;
+    color: #fc8181;
+    margin-top: 8px;
+    margin-bottom: 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    animation: fadeIn 0.3s ease forwards;
+    background: rgba(252, 129, 129, 0.1);
+    padding: 8px 12px;
+    border-radius: 6px;
+    border-left: 3px solid #fc8181;
+}
+
+/* ── OTP inputs ── */
+.otp-container {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 16px;
+}
+
+.otp-input {
+    width: 48px;
+    height: 56px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 2px solid rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+    text-align: center;
+    font-size: 22px;
+    font-weight: 700;
+    color: #ffffff;
+    transition: all 0.25s ease;
+    caret-color: #5488a3;
+    outline: none;
+}
+
+.otp-input:focus {
+    border-color: #5488a3;
+    background: rgba(84, 136, 163, 0.12);
+    box-shadow: 0 0 12px rgba(84, 136, 163, 0.4);
+    transform: scale(1.05);
+}
+
+.otp-input:not(:placeholder-shown) {
+    border-color: rgba(84, 136, 163, 0.5);
+    background: rgba(84, 136, 163, 0.08);
+}
+
+/* Reenviar código */
+.reset-resend {
+    text-align: center;
+    font-size: 13px;
+    color: #a0aec0;
+    margin-bottom: 16px;
+}
+
+.reset-resend-btn {
+    background: none;
+    border: none;
+    color: #5488a3;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 13px;
+    transition: color 0.3s ease;
+    padding: 0;
+}
+
+.reset-resend-btn:hover {
+    color: #90cdf4;
+    text-decoration: underline;
+}
+
+.reset-resend-btn:disabled {
+    color: #4a5568;
+    cursor: not-allowed;
+    text-decoration: none;
+}
+
+/* Botón volver */
+.reset-back-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: none;
+    border: none;
+    color: #718096;
+    font-size: 13px;
+    cursor: pointer;
+    margin-top: 12px;
+    padding: 0;
+    transition: color 0.3s ease;
+}
+
+.reset-back-btn:hover {
+    color: #a0aec0;
+}
+
+/* Paso 4: Éxito */
+.reset-success {
+    text-align: center;
+    padding: 10px 0;
+}
+
+.reset-success__icon {
+    font-size: 64px;
+    color: #68d391;
+    margin-bottom: 20px;
+    animation: successPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes successPop {
+    from { transform: scale(0); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+/* ── Animaciones ── */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ══════════════════════════════════════════════════
+   RESPONSIVO
+══════════════════════════════════════════════════ */
+@media screen and (max-width: 600px) {
+    .form-register {
+        padding: 28px 20px;
+        margin: 16px auto;
+        border-radius: 14px;
+    }
+
+    .form-title {
+        font-size: 22px;
+    }
+
+    .form-row-custom .formulario__grupo {
+        flex: 1 1 100%;
+    }
+
+    /* Botón login 100% ancho en móvil */
+    .formulario__grupo-btn-enviar {
+        margin-top: 20px;
+    }
+
+    .formulario__btn {
+        width: 100%;
+        font-size: 15px;
+        height: 48px;
+    }
+
+    /* Modal responsivo */
+    .reset-modal {
+        padding: 28px 20px 24px;
+        border-radius: 14px;
+    }
+
+    .otp-container {
+        gap: 7px;
+    }
+
+    .otp-input {
+        width: 42px;
+        height: 50px;
+        font-size: 20px;
+    }
+
+    .reset-modal__title {
+        font-size: 20px;
+    }
+}
+
+@media screen and (max-width: 380px) {
+    .otp-input {
+        width: 36px;
+        height: 44px;
+        font-size: 18px;
+        border-radius: 8px;
+    }
+
+    .otp-container {
+        gap: 5px;
+    }
+}

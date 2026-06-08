@@ -1,40 +1,344 @@
 {% extends 'app/base.html' %}
-    {% load static %}
-    <link rel="icon" href="{% static 'app/img/logo.png' %}">
-	{% block css %}
-    <link rel="stylesheet" href="{% static 'app/vistas/contacto.css' %}">
-    <link rel="stylesheet" href="{% static 'app/vistas/base.css' %}">
-    {% endblock  %}
+{% load static %}
 
-{% block contenido%}
+{% block css %}
+<link rel="icon" href="{% static 'app/img/logo.png' %}">
+<link rel="stylesheet" href="{% static 'app/vistas/registerStyle.css' %}?v=1.3">
+<link rel="stylesheet" href="{% static 'app/vistas/contacto.css' %}?v=1.3">
+<link rel="stylesheet" href="{% static 'app/vistas/base.css' %}?v=1.3">
+{% endblock %}
 
-{% comment %} contenido que agrregara la denisse {% endcomment %}
-    <br>
-    <br>
-    <br>
-    <div class="container" style="background-color: #fff; width: 45rem; border-radius: 20px;">
-        <br>
-        <div class="row">
-            <div class="col-md-5 mx-auto mt-4">
-                <h1 class="text-center text-dark font-weight-bold font-italic">Contacto</h2>
-                    <br>
-                    <form action="" class="formulario_contacto" method="post">
-                    
-                        {%csrf_token%}
-                    
-                        {{form}}
-                        <br>
-                        <br>
-                        <div class="d-flex justify-content-center">
-                            <input align="center" type="submit" class="btn btn-primary" name="btnEnviar" value="Enviar">
+{% block contenido %}
+<div class="container py-5" style="margin-top: 30px;">
+    <div class="row align-items-start">
+        <!-- Columna Izquierda: Formulario de Contacto -->
+        <div class="col-lg-6 mb-4">
+            <section class="form-register w-100 m-0">
+                <div class="form-container">
+                    <h2 class="form-title">Contáctanos</h2>
+
+                    {% if mensaje %}
+                    <div class="formulario__alerta-global border-0 text-white mb-4" role="alert"
+                        style="background: rgba(40, 167, 69, 0.25); border-left: 4px solid #28a745 !important; color: #28a745;">
+                        <p class="m-0"><i class="fa-solid fa-circle-check mr-2"></i> {{ mensaje }}</p>
+                    </div>
+                    {% endif %}
+
+                    <form action="" class="formulario_contacto" method="post" novalidate>
+                        {% csrf_token %}
+
+                        <!-- Nombre -->
+                        <div class="formulario__grupo" id="grupo__nombre">
+                            <label for="id_nombre" class="formulario__label">Nombre</label>
+                            <div class="formulario__grupo-input">
+                                <i class="formulario__icon fa-solid fa-user"></i>
+                                {{ form.nombre }}
+                            </div>
+                            {% if form.nombre.errors %}
+                            {% for error in form.nombre.errors %}
+                            <p class="formulario__input-error"><i class="fa-solid fa-circle-exclamation"></i> {{ error
+                                }}</p>
+                            {% endfor %}
+                            {% endif %}
                         </div>
-        
+
+                        <!-- Email -->
+                        <div class="formulario__grupo" id="grupo__email">
+                            <label for="id_email" class="formulario__label">Correo Electrónico</label>
+                            <div class="formulario__grupo-input">
+                                <i class="formulario__icon fa-solid fa-envelope"></i>
+                                {{ form.email }}
+                            </div>
+                            {% if form.email.errors %}
+                            {% for error in form.email.errors %}
+                            <p class="formulario__input-error"><i class="fa-solid fa-circle-exclamation"></i> {{ error
+                                }}</p>
+                            {% endfor %}
+                            {% endif %}
+                        </div>
+
+                        <!-- Teléfono -->
+                        <div class="formulario__grupo" id="grupo__telefono">
+                            <label for="id_telefono" class="formulario__label">Teléfono</label>
+                            <div class="formulario__grupo-input">
+                                <i class="formulario__icon fa-solid fa-phone"></i>
+                                {{ form.telefono }}
+                            </div>
+                            {% if form.telefono.errors %}
+                            {% for error in form.telefono.errors %}
+                            <p class="formulario__input-error"><i class="fa-solid fa-circle-exclamation"></i> {{ error
+                                }}</p>
+                            {% endfor %}
+                            {% endif %}
+                        </div>
+
+                        <!-- Tipo de Consulta -->
+                        <div class="formulario__grupo" id="grupo__tipo_consulta">
+                            <label for="id_tipo_consulta" class="formulario__label">Tipo Consulta</label>
+                            <div class="formulario__grupo-input">
+                                <i class="formulario__icon fa-solid fa-circle-question"></i>
+                                {{ form.tipo_consulta }}
+                            </div>
+                            {% if form.tipo_consulta.errors %}
+                            {% for error in form.tipo_consulta.errors %}
+                            <p class="formulario__input-error"><i class="fa-solid fa-circle-exclamation"></i> {{ error
+                                }}</p>
+                            {% endfor %}
+                            {% endif %}
+                        </div>
+
+                        <!-- Mensaje -->
+                        <div class="formulario__grupo" id="grupo__mensaje">
+                            <label for="id_mensaje" class="formulario__label">Mensaje</label>
+                            <div class="formulario__grupo-input align-items-start">
+                                <i class="formulario__icon fa-solid fa-message" style="margin-top: 14px;"></i>
+                                {{ form.mensaje }}
+                            </div>
+                            {% if form.mensaje.errors %}
+                            {% for error in form.mensaje.errors %}
+                            <p class="formulario__input-error"><i class="fa-solid fa-circle-exclamation"></i> {{ error
+                                }}</p>
+                            {% endfor %}
+                            {% endif %}
+                        </div>
+
+                        <div class="formulario__grupo-btn-enviar">
+                            <button type="submit" class="formulario__btn">
+                                <i class="fa-solid fa-paper-plane"></i>
+                                <span>Enviar Mensaje</span>
+                            </button>
+                        </div>
                     </form>
-                    {{mensaje}}
-                    <br>
-            </div>
-            <br>
+                </div>
+            </section>
+        </div>
+
+        <!-- Columna Derecha: Asistente Virtual Chatbot -->
+        <div class="col-lg-6 mb-4">
+            <section class="form-register w-100 m-0">
+                <div class="form-container">
+                    <h2 class="form-title">MangaBot 🤖</h2>
+
+                    <div class="chat-container">
+                        <!-- Área de mensajes -->
+                        <div class="chat-messages flex-grow-1 p-3 mb-3" id="chat-messages-area">
+                            <div class="chat-message bot-msg">
+                                <div class="msg-avatar"><i class="fa-solid fa-robot"></i></div>
+                                <div class="msg-bubble">
+                                    ¡Hola! Soy <strong>MangaBot</strong> 🤖, tu asistente virtual. ¿Tienes dudas sobre
+                                    tu pedido, devoluciones o reembolsos? Haz clic abajo o pregúntame directamente.
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Chips de preguntas frecuentes -->
+                        <div class="chat-chips mb-3">
+                            <button type="button" class="chat-chip-btn" onclick="sendQuickQuestion('envio')">📦 ¿Y mi
+                                envío?</button>
+                            <button type="button" class="chat-chip-btn" onclick="sendQuickQuestion('devolucion')">↩️
+                                Devolución</button>
+                            <button type="button" class="chat-chip-btn" onclick="sendQuickQuestion('reembolso')">💰
+                                Reembolso</button>
+                            <button type="button" class="chat-chip-btn" onclick="sendQuickQuestion('pago')">💳 Métodos
+                                de pago</button>
+                        </div>
+
+                        <!-- Input de chat -->
+                        <div class="chat-input-wrapper">
+                            <input type="text" id="chat-user-input" class="chat-input-field"
+                                placeholder="Escribe tu consulta aquí..." onkeypress="handleKeyPress(event)">
+                            <button class="btn-chat-send" type="button" onclick="sendUserMessage()">
+                                <i class="fa-solid fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </div>
     </div>
+</div>
+{% endblock %}
 
-{% endblock  %}
+{% block js %}
+{{ block.super }}
+<script>
+    let chatMessagesArea = null;
+    let userInputField = null;
+    let isBotTyping = false;
+
+    // Respuestas predefinidas
+    const BOT_RESPONSES = {
+        envio: "📦 <strong>Envíos:</strong> Si tu envío aún no ha llegado, por favor verifica el código de seguimiento en tu correo. Trabajamos con Starken y Chilepost. Los despachos demoran de 2 a 5 días hábiles. Si hay un retraso mayor, completa el formulario de contacto adjunto especificando tu número de pedido para ayudarte de inmediato.",
+        devolucion: "↩️ <strong>Devoluciones:</strong> Tienes un plazo de hasta 10 días tras recibir tu compra para solicitar una devolución. El producto debe encontrarse sellado y en perfecto estado. Si tu manga vino con fallas de imprenta o daños de fábrica, te lo cambiamos sin costo adicional.",
+        reembolso: "💰 <strong>Reembolsos:</strong> Una vez recibido el producto devuelto y comprobado su estado, gestionaremos tu reembolso. El dinero se devolverá al mismo medio de pago con el que compraste en un plazo de 3 a 5 días hábiles.",
+        pago: "💳 <strong>Métodos de pago:</strong> Aceptamos pagos seguros vía Webpay (tarjeta de crédito y débito) y transferencia bancaria directa. Si tienes problemas al pagar, contáctanos mediante el formulario.",
+        hola: "¡Hola! 👋 Soy MangaBot. ¿En qué te puedo ayudar hoy? Pregúntame sobre envíos, devoluciones, reembolsos o métodos de pago.",
+        gracias: "¡De nada! 😊 Si tienes otra pregunta, aquí estaré. ¡Feliz lectura! 📚",
+        adios: "¡Hasta luego! Que tengas un excelente día de lectura. 📖✨",
+        ayuda: "Si necesitas asistencia directa de un agente de MangaLords, por favor rellena el formulario de contacto que está a la izquierda. ¡Te responderemos por correo en un abrir y cerrar de ojos!"
+    };
+
+    function appendMessage(sender, text) {
+        const area = chatMessagesArea || document.getElementById('chat-messages-area');
+        if (!area) return;
+        const messageDiv = document.createElement('div');
+        messageDiv.classList.add('chat-message', sender === 'bot' ? 'bot-msg' : 'user-msg');
+
+        if (sender === 'bot') {
+            messageDiv.innerHTML = `
+                <div class="msg-avatar"><i class="fa-solid fa-robot"></i></div>
+                <div class="msg-bubble">${text}</div>
+            `;
+        } else {
+            messageDiv.innerHTML = `
+                <div class="msg-bubble">${text}</div>
+            `;
+        }
+
+        area.appendChild(messageDiv);
+        scrollToBottom();
+    }
+
+    function showTypingIndicator() {
+        const area = chatMessagesArea || document.getElementById('chat-messages-area');
+        if (!area) return;
+        const indicatorDiv = document.createElement('div');
+        indicatorDiv.id = 'typing-indicator';
+        indicatorDiv.classList.add('chat-message', 'bot-msg');
+        indicatorDiv.innerHTML = `
+            <div class="msg-avatar"><i class="fa-solid fa-robot"></i></div>
+            <div class="msg-bubble typing-dots">
+                <span></span><span></span><span></span>
+            </div>
+        `;
+        area.appendChild(indicatorDiv);
+        scrollToBottom();
+    }
+
+    function removeTypingIndicator() {
+        const indicator = document.getElementById('typing-indicator');
+        if (indicator) {
+            indicator.remove();
+        }
+    }
+
+    function scrollToBottom() {
+        const area = chatMessagesArea || document.getElementById('chat-messages-area');
+        if (area) {
+            area.scrollTop = area.scrollHeight;
+        }
+    }
+
+    function getBotReply(inputText) {
+        const text = inputText.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""); // Normalizar acentos
+
+        if (text.includes("envio") || text.includes("lleg") || text.includes("recib") || text.includes("seguimiento") || text.includes("despacho") || text.includes("starken") || text.includes("chilepost")) {
+            return BOT_RESPONSES.envio;
+        } else if (text.includes("devol") || text.includes("devolver") || text.includes("cambio") || text.includes("dano") || text.includes("falla")) {
+            return BOT_RESPONSES.devolucion;
+        } else if (text.includes("reembolso") || text.includes("dinero") || text.includes("devolver plata") || text.includes("pago de vuelta")) {
+            return BOT_RESPONSES.reembolso;
+        } else if (text.includes("pago") || text.includes("pagar") || text.includes("tarjeta") || text.includes("transferencia") || text.includes("webpay") || text.includes("medio de pago")) {
+            return BOT_RESPONSES.pago;
+        } else if (text.includes("hola") || text.includes("buenas") || text.includes("saludo")) {
+            return BOT_RESPONSES.hola;
+        } else if (text.includes("gracias") || text.includes("agradezco") || text.includes("buena onda")) {
+            return BOT_RESPONSES.gracias;
+        } else if (text.includes("adios") || text.includes("chao") || text.includes("nos vemos")) {
+            return BOT_RESPONSES.adios;
+        } else if (text.includes("ayuda") || text.includes("soporte") || text.includes("humano") || text.includes("persona") || text.includes("contacto")) {
+            return BOT_RESPONSES.ayuda;
+        }
+
+        return "Lo siento, no entendí bien esa consulta. 😅 Puedes preguntarme directamente sobre envíos, devoluciones, reembolsos o métodos de pago, o usar uno de los botones rápidos de arriba.";
+    }
+
+    function triggerBotResponse(textResponse) {
+        if (isBotTyping) return;
+        isBotTyping = true;
+
+        showTypingIndicator();
+
+        // Simular un tiempo de respuesta de escritura
+        setTimeout(() => {
+            removeTypingIndicator();
+            appendMessage('bot', textResponse);
+            isBotTyping = false;
+        }, 1000);
+    }
+
+    function sendQuickQuestion(type) {
+        if (isBotTyping) return;
+
+        let questionText = "";
+        let responseText = "";
+
+        switch (type) {
+            case 'envio':
+                questionText = "📦 ¿Y mi envío?";
+                responseText = BOT_RESPONSES.envio;
+                break;
+            case 'devolucion':
+                questionText = "↩️ Devolución";
+                responseText = BOT_RESPONSES.devolucion;
+                break;
+            case 'reembolso':
+                questionText = "💰 Reembolso";
+                responseText = BOT_RESPONSES.reembolso;
+                break;
+            case 'pago':
+                questionText = "💳 Métodos de pago";
+                responseText = BOT_RESPONSES.pago;
+                break;
+        }
+
+        appendMessage('user', questionText);
+        triggerBotResponse(responseText);
+    }
+
+    function sendUserMessage() {
+        if (isBotTyping) return;
+
+        const input = userInputField || document.getElementById('chat-user-input');
+        if (!input) return;
+        const userInput = input.value.trim();
+        if (userInput === "") return;
+
+        appendMessage('user', userInput);
+        input.value = "";
+
+        const botReplyText = getBotReply(userInput);
+        triggerBotResponse(botReplyText);
+    }
+
+    function handleKeyPress(event) {
+        if (event.key === 'Enter') {
+            sendUserMessage();
+        }
+    }
+
+    // Filtro y validación en tiempo real para el teléfono (9 dígitos, solo números, sin símbolos ni signos)
+    document.addEventListener('DOMContentLoaded', () => {
+        chatMessagesArea = document.getElementById('chat-messages-area');
+        userInputField = document.getElementById('chat-user-input');
+
+        const telefonoInput = document.getElementById('id_telefono');
+        if (telefonoInput) {
+            telefonoInput.addEventListener('input', (e) => {
+                // Eliminar todo lo que no sea dígito
+                e.target.value = e.target.value.replace(/\D/g, '');
+                // Limitar a 9 números como máximo
+                if (e.target.value.length > 9) {
+                    e.target.value = e.target.value.slice(0, 9);
+                }
+            });
+            telefonoInput.addEventListener('paste', (e) => {
+                e.preventDefault();
+                const pastedData = (e.clipboardData || window.clipboardData).getData('text');
+                const cleanedData = pastedData.replace(/\D/g, '').slice(0, 9);
+                e.target.value = cleanedData;
+            });
+        }
+    });
+</script>
+{% endblock %}

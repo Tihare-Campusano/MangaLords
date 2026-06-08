@@ -102,17 +102,44 @@ def Registro(request):
 
 
 # contacto
+@login_required
 def contacto(request):
-    data = {
-        'form': ContactoForm()
-    }
+    initial_data = {}
+    registro = RegistroUsuario.objects.filter(user=request.user).first()
+    if registro:
+        initial_data['nombre'] = f"{registro.nombres} {registro.apellidos}"[:50]
+        initial_data['email'] = registro.email
+        initial_data['telefono'] = registro.telefono
+    else:
+        initial_data['nombre'] = request.user.get_full_name() or request.user.username
+        initial_data['email'] = request.user.email
+
     if request.method == 'POST':
-        formulario = ContactoForm(data = request.POST)
+        formulario = ContactoForm(data=request.POST, initial=initial_data)
+        formulario.fields['nombre'].disabled = True
+        formulario.fields['email'].disabled = True
+        
         if formulario.is_valid():
             formulario.save()
-            data["mensaje"] = "Mensaje enviado"
+            form_nuevo = ContactoForm(initial=initial_data)
+            form_nuevo.fields['nombre'].disabled = True
+            form_nuevo.fields['email'].disabled = True
+            data = {
+                'form': form_nuevo,
+                'mensaje': "Mensaje enviado"
+            }
+            return render(request, 'app/contacto.html', data)
         else:
-            data["form"] = formulario
+            data = {
+                'form': formulario
+            }
+    else:
+        formulario = ContactoForm(initial=initial_data)
+        formulario.fields['nombre'].disabled = True
+        formulario.fields['email'].disabled = True
+        data = {
+            'form': formulario
+        }
             
     return render(request,'app/contacto.html',data)
 
