@@ -1,39 +1,293 @@
 {% extends 'app/admin.html' %}
-
-{% block contenido %}
+{% load static %}
 {% load humanize %}
-<br>
-<br>
-<br>
-<div class="card">
-    <div class="card-body">
-        <h2>Listado de Mangas</h2>
-        <hr>
-        <table class="table table-stripped table-hover table-responsive-sm">
-            <tr>
-                <th>Titulo</th>
-                <th>Precio</th>
-                <th>Editorial</th>
-                <th>Opciones</th>
-            </tr>
 
-            {% for p in mangas %}
+{% block admin_contenido %}
+<style>
+    /* Estilos del Listado */
+    .nav-pills .nav-link {
+        color: #b2c0cc !important;
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        margin-right: 12px;
+        font-weight: 600;
+        border-radius: 30px;
+        transition: all 0.3s ease;
+        padding: 10px 24px;
+        font-size: 14.5px;
+    }
+    .nav-pills .nav-link:hover {
+        background: rgba(201, 26, 36, 0.1);
+        color: #ffffff !important;
+    }
+    .nav-pills .nav-link.active {
+        background: linear-gradient(135deg, #8f0f15 0%, #c91a24 100%) !important;
+        color: #ffffff !important;
+        border-color: rgba(255, 255, 255, 0.1);
+        box-shadow: 0 4px 12px rgba(201, 26, 36, 0.4);
+    }
+    
+    .table-container {
+        margin-top: 20px;
+        overflow-x: auto;
+    }
+    
+    .admin-table {
+        width: 100%;
+        color: #e2e2e7;
+        border-collapse: collapse;
+        background: rgba(0, 0, 0, 0.2);
+    }
+    .admin-table th {
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 12.5px;
+        letter-spacing: 0.5px;
+        padding: 14px 16px;
+        border-bottom: 2px solid rgba(255, 255, 255, 0.08);
+    }
+    
+    .mangas-header th {
+        background: rgba(201, 26, 36, 0.15);
+        color: #ff3344;
+        border-bottom: 2px solid rgba(201, 26, 36, 0.35);
+    }
+    
+    .users-header th {
+        background: rgba(24, 94, 131, 0.15);
+        color: #5488a3;
+        border-bottom: 2px solid rgba(84, 136, 163, 0.35);
+    }
+    
+    .admin-table td {
+        padding: 14px 16px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        font-size: 14px;
+        vertical-align: middle;
+    }
+    .admin-table tbody tr:hover {
+        background: rgba(255, 255, 255, 0.02);
+    }
+    
+    .list-preview-img {
+        width: 40px;
+        height: 55px;
+        object-fit: cover;
+        border-radius: 6px;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+    .list-no-img {
+        width: 40px;
+        height: 55px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #718096;
+        font-size: 18px;
+    }
+    
+    .action-panel-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+    
+    .export-btn-group {
+        display: flex;
+        gap: 10px;
+    }
+    .btn-export {
+        font-size: 13.5px;
+        font-weight: 600;
+        border-radius: 20px;
+        padding: 8px 18px;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: all 0.25s ease;
+    }
+    .btn-export-excel {
+        background: rgba(40, 184, 125, 0.12);
+        color: #28b87d !important;
+        border: 1px solid rgba(40, 184, 125, 0.35);
+    }
+    .btn-export-excel:hover {
+        background: linear-gradient(135deg, #1b8a5a 0%, #28b87d 100%);
+        color: #ffffff !important;
+        box-shadow: 0 4px 12px rgba(40, 184, 125, 0.35);
+        transform: translateY(-1px);
+    }
+    .btn-export-pdf {
+        background: rgba(252, 129, 129, 0.12);
+        color: #fc8181 !important;
+        border: 1px solid rgba(252, 129, 129, 0.35);
+    }
+    .btn-export-pdf:hover {
+        background: linear-gradient(135deg, #8f0f15 0%, #c91a24 100%);
+        color: #ffffff !important;
+        box-shadow: 0 4px 12px rgba(201, 26, 36, 0.35);
+        transform: translateY(-1px);
+    }
+    
+    .badge-admin-type {
+        background: rgba(201, 26, 36, 0.15);
+        color: #ff3344;
+        border: 1px solid rgba(201, 26, 36, 0.35);
+        font-size: 11px;
+        font-weight: 600;
+        padding: 3px 8px;
+        border-radius: 12px;
+        text-transform: uppercase;
+    }
+    .badge-user-type {
+        background: rgba(84, 136, 163, 0.15);
+        color: #5488a3;
+        border: 1px solid rgba(84, 136, 163, 0.35);
+        font-size: 11px;
+        font-weight: 600;
+        padding: 3px 8px;
+        border-radius: 12px;
+        text-transform: uppercase;
+    }
+</style>
 
-            <tr>
-                <td>{{ p.titulo | title }}</td>
-                <td>${{ p.precio | intcomma }}</td>
-                <td>{{ p.editorial | title }}</td>
-                <td>
-                    <a href="{% url 'modificar_manga' p.id %}" class="btn btn-info btn-sm">Modificar</a>
-                    <a href="{% url 'eliminar_producto' p.id %}" class="btn btn-danger btn-sm">Eliminar</a>
-                </td>
+<ul class="nav nav-pills mb-4" id="adminTabs" role="tablist">
+    <li class="nav-item">
+        <a class="nav-link active" id="mangas-tab" data-toggle="pill" href="#mangas" role="tab" aria-controls="mangas" aria-selected="true">
+            <i class="fa-solid fa-book"></i> Catálogo de Mangas
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="usuarios-tab" data-toggle="pill" href="#usuarios" role="tab" aria-controls="usuarios" aria-selected="false">
+            <i class="fa-solid fa-users"></i> Usuarios del Sistema
+        </a>
+    </li>
+</ul>
 
-            </tr>
+<div class="tab-content" id="adminTabsContent">
+    <!-- PESTAÑA: MANGAS -->
+    <div class="tab-pane fade show active" id="mangas" role="tabpanel" aria-labelledby="mangas-tab">
+        <div class="admin-card">
+            <div class="action-panel-header">
+                <h2 class="admin-title">Inventario de Mangas</h2>
+                <div class="export-btn-group">
+                    <a href="{% url 'export_mangas_excel' %}" class="btn btn-export btn-export-excel">
+                        <i class="fa-solid fa-file-excel"></i> Excel
+                    </a>
+                    <a href="{% url 'export_mangas_pdf' %}" class="btn btn-export btn-export-pdf">
+                        <i class="fa-solid fa-file-pdf"></i> PDF
+                    </a>
+                </div>
+            </div>
+            
+            <div class="table-container">
+                <table class="admin-table table-responsive-sm">
+                    <thead>
+                        <tr class="mangas-header">
+                            <th class="text-center" style="width: 80px;">ID</th>
+                            <th class="text-center" style="width: 70px;">Imagen</th>
+                            <th>Título del Manga</th>
+                            <th>Editorial</th>
+                            <th class="text-center">Precio</th>
+                            <th class="text-center">Cantidad (Stock)</th>
+                            <th class="text-center" style="width: 180px;">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for p in mangas %}
+                            <tr>
+                                <td class="text-center font-weight-bold" style="color: #ff3344;">{{ p.id }}</td>
+                                <td class="text-center">
+                                    {% if p.imagen %}
+                                        <img src="{{ p.imagen.url }}" alt="{{ p.titulo }}" class="list-preview-img">
+                                    {% else %}
+                                        <div class="list-no-img mx-auto">
+                                            <i class="fa-solid fa-image"></i>
+                                        </div>
+                                    {% endif %}
+                                </td>
+                                <td class="font-weight-bold" style="color: #ffffff;">{{ p.titulo }}</td>
+                                <td>{{ p.editorial }}</td>
+                                <td class="text-center font-weight-bold text-success">${{ p.precio | intcomma }}</td>
+                                <td class="text-center font-weight-bold {% if p.cantidad <= 2 %}text-danger{% elif p.cantidad <= 5 %}text-warning{% endif %}">
+                                    {{ p.cantidad }}
+                                </td>
+                                <td class="text-center">
+                                    <a href="{% url 'modificar_manga' p.id %}" class="btn btn-info btn-sm px-3" style="border-radius: 15px; font-weight: 600;">
+                                        <i class="fa-solid fa-edit"></i> Modificar
+                                    </a>
+                                    &nbsp;
+                                    <a href="{% url 'eliminar_producto' p.id %}" class="btn btn-danger btn-sm px-3" style="border-radius: 15px; font-weight: 600;" onclick="return confirm('¿Estás seguro de que deseas eliminar este manga?')">
+                                        <i class="fa-solid fa-trash-can"></i> Eliminar
+                                    </a>
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="7" class="text-center text-muted py-4">No hay mangas registrados en el inventario.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 
-            {% endfor %}
-        </table>
+    <!-- PESTAÑA: USUARIOS -->
+    <div class="tab-pane fade" id="usuarios" role="tabpanel" aria-labelledby="usuarios-tab">
+        <div class="admin-card" style="border-color: rgba(84, 136, 163, 0.35) !important;">
+            <div class="action-panel-header">
+                <h2 class="admin-title" style="color: #5488a3; text-shadow: 0 0 10px rgba(84, 136, 163, 0.4);">Cuentas del Sistema</h2>
+                <div class="export-btn-group">
+                    <a href="{% url 'export_users_excel' %}" class="btn btn-export btn-export-excel" style="background: rgba(40, 184, 125, 0.12); border-color: rgba(40, 184, 125, 0.3);">
+                        <i class="fa-solid fa-file-excel"></i> Excel
+                    </a>
+                    <a href="{% url 'export_users_pdf' %}" class="btn btn-export btn-export-pdf" style="background: rgba(84, 136, 163, 0.12); border-color: rgba(84, 136, 163, 0.3);">
+                        <i class="fa-solid fa-file-pdf"></i> PDF
+                    </a>
+                </div>
+            </div>
+            
+            <div class="table-container">
+                <table class="admin-table table-responsive-sm">
+                    <thead>
+                        <tr class="users-header">
+                            <th>Username/Email</th>
+                            <th>Nombre Completo</th>
+                            <th>Correo Electrónico</th>
+                            <th class="text-center">Teléfono</th>
+                            <th class="text-center">Rol</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for u in usuarios %}
+                            <tr>
+                                <td class="font-weight-bold" style="color: #ffffff;">{{ u.username }}</td>
+                                <td>{{ u.nombres }}</td>
+                                <td>{{ u.email }}</td>
+                                <td class="text-center">{{ u.telefono }}</td>
+                                <td class="text-center">
+                                    {% if u.is_staff %}
+                                        <span class="badge-admin-type"><i class="fa-solid fa-shield-halved"></i> Admin</span>
+                                    {% else %}
+                                        <span class="badge-user-type"><i class="fa-solid fa-user"></i> Cliente</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="5" class="text-center text-muted py-4">No hay usuarios registrados en el sistema.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </div>
-
-
 {% endblock %}

@@ -1,64 +1,109 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
-    <title>MangaLords</title>
-    {% load static%}
-    <link rel="icon" href="{% static 'app/img/logo.png' %}">
-    {% block css %}
-    <link rel="stylesheet" href="{% static 'app/vistas/directorio.css' %}">
-    <link rel="stylesheet" href="{% static 'app/vistas/base.css' %}">
-    <link rel="stylesheet" href="{% static 'app/vistas/carrito.css' %}">
-    <link rel="stylesheet" href="{% static 'app/vistas/menu.css' %}">
-    <link rel="stylesheet" href="{% static 'app/vistas/pagar.css' %}">
-    <link rel="stylesheet" href="{% static 'app/vistas/registerStyle.css' %}">
-    <link rel="stylesheet" href="{% static 'app/vistas/vistaStilo.css' %}">
-    {% endblock  %}
+{% extends 'app/base.html' %}
+{% load static %}
 
-    {% block js %}
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.3/dist/jquery.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="{% static 'app/javaScript/registroScript.js'%}"></script>
-    {% endblock  %}
+{% block css %}
+{{ block.super }}
+<!-- Estilos del Panel de Administrador -->
+<style>
+    .admin-dashboard-container {
+        max-width: 1200px;
+        margin: 40px auto;
+        padding: 0 20px;
+        min-height: 70vh;
+    }
+    .admin-nav-tabs {
+        display: flex;
+        gap: 15px;
+        border-bottom: 2px solid rgba(201, 26, 36, 0.35);
+        padding-bottom: 12px;
+        margin-bottom: 30px;
+        flex-wrap: wrap;
+    }
+    .admin-nav-item {
+        color: #b2c0cc !important;
+        font-family: 'Outfit', sans-serif;
+        font-size: 15px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        text-decoration: none !important;
+        padding: 10px 22px;
+        border-radius: 8px;
+        background: rgba(18, 18, 22, 0.5);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .admin-nav-item:hover {
+        background: rgba(201, 26, 36, 0.12);
+        border-color: rgba(201, 26, 36, 0.4);
+        color: #ffffff !important;
+        transform: translateY(-2px);
+    }
+    .admin-nav-item.active {
+        background: linear-gradient(135deg, #8f0f15 0%, #c91a24 100%);
+        border-color: rgba(255, 255, 255, 0.15);
+        color: #ffffff !important;
+        box-shadow: 0 4px 12px rgba(201, 26, 36, 0.4);
+    }
+    .admin-card {
+        background: rgba(18, 18, 22, 0.78) !important;
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+        border: 1px solid rgba(201, 26, 36, 0.35) !important;
+        border-radius: 15px !important;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8), 0 0 15px rgba(201, 26, 36, 0.05) !important;
+        padding: 35px;
+        color: #e2e2e7;
+    }
+    .admin-card-header {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        padding-bottom: 15px;
+        margin-bottom: 25px;
+    }
+    .admin-title {
+        font-family: 'Cinzel', serif;
+        font-size: 26px;
+        color: #ff3344;
+        text-shadow: 0 0 10px rgba(255, 51, 68, 0.4);
+        margin: 0;
+        letter-spacing: 1px;
+    }
+    
+    /* Adaptaciones del CRUD */
+    .form-control-file {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px dashed rgba(255, 255, 255, 0.2);
+        padding: 10px;
+        border-radius: 8px;
+        width: 100%;
+        transition: border-color 0.3s ease;
+    }
+    .form-control-file:hover {
+        border-color: #ff3344;
+    }
+</style>
+{% endblock %}
 
-</head>
-
-<body>
-    {% load static%}
-    <!-- barra de navegacio -->
-    <input type="checkbox" class="responsivo" id="check">
-    <nav class="barNav">
-        <!-- logo -->
-        <div class="logo">
-            <a href="{% url 'MangaLords'%}"><img src="{% static 'app/img/logo.png'%} "alt="logo"></a>
-        </div>
-        <!-- seccion de opciones -->
-        <ol>
-            <li><a href="{% url 'MangaLords'%}">Inicio</a></li>
-            <li><a href="{% url 'agregar_producto'%}">Agregar</a></li>
-            <li><a href="{% url 'listar_productos'%}">Listar</a></li>
-        
-        </ol>
-        <!-- responsive -->
-        <label for="check" class="bar">
-            <span class="fa fa-bars" id="bars"></span>
-            <span class="fa fa-times" id="times"></span>
-        </label>
-    </nav>
-    <!-- fin barra de navegacio -->
-    </body>
-    </html>
-    <div id="contenido">
-        {% block contenido%}
-
-        {% endblock %}
+{% block contenido %}
+<div class="admin-dashboard-container">
+    <!-- Menu Navegacion de Administrador -->
+    <div class="admin-nav-tabs">
+        <a href="{% url 'admin' %}" class="admin-nav-item {% if request.resolver_match.view_name == 'admin' %}active{% endif %}">
+            <i class="fa-solid fa-chart-line"></i> Dashboard
+        </a>
+        <a href="{% url 'agregar_producto' %}" class="admin-nav-item {% if request.resolver_match.view_name == 'agregar_producto' %}active{% endif %}">
+            <i class="fa-solid fa-plus"></i> Agregar Manga
+        </a>
+        <a href="{% url 'listar_productos' %}" class="admin-nav-item {% if request.resolver_match.view_name == 'listar_productos' or request.resolver_match.view_name == 'modificar_manga' %}active{% endif %}">
+            <i class="fa-solid fa-list-check"></i> Listados de Admin
+        </a>
     </div>
-    <br>
-    <br>
-    <br>
+
+    <!-- Contenido Dinamico del Admin -->
+    {% block admin_contenido %}
+    {% endblock %}
+</div>
+{% endblock %}

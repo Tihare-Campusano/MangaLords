@@ -1,38 +1,185 @@
 {% extends 'app/admin.html' %}
+{% load static %}
 
-{% block contenido %}
+{% block admin_contenido %}
+<style>
+    .agregar-container {
+        display: grid;
+        grid-template-columns: 3fr 2fr;
+        gap: 30px;
+        align-items: start;
+    }
+    @media screen and (max-width: 992px) {
+        .agregar-container {
+            grid-template-columns: 1fr;
+        }
+    }
+    .instrucciones-excel {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px dashed rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        padding: 20px;
+        margin-top: 15px;
+        font-size: 13.5px;
+    }
+    .instrucciones-excel ul {
+        padding-left: 20px;
+        margin-bottom: 0;
+    }
+    .instrucciones-excel li {
+        margin-bottom: 8px;
+        color: #a8a8b3;
+    }
+    .instrucciones-excel li strong {
+        color: #ffffff;
+    }
+    .file-upload-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 15px;
+    }
+    .btn-file-select {
+        flex-grow: 1;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px dashed rgba(84, 136, 163, 0.4);
+        padding: 12px;
+        border-radius: 8px;
+        color: #b2c0cc;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-align: center;
+    }
+    .btn-file-select:hover {
+        border-color: #5488a3;
+        background: rgba(84, 136, 163, 0.08);
+        color: #ffffff;
+    }
+</style>
 
-
-
-
-
-<br>
-<br>
-<div class="container" style="font-size: 16px;">
-    <div class="row">
-        <div class="col-md-5 mx-auto mt-4">
-            <div class="card" style="width: 30rem; border-radius: 10px;"> 
-                <h2 class="text-center font-weight-bold">Agregar Manga</h2>
-                <div class="card-body col-md-5">
-                    <form action="" method="post" enctype="multipart/form-data">
-
-                        {% csrf_token %}
-                        {{ form }}
-
-                        <div class="d-flex justify-content-end" style="margin-left: 28rem;">
-                            <input type="reset" value="Cancelar" class="btn btn-secondary">
-                            &nbsp;
-                            <input type="submit" value="Guardar" class="btn btn-primary">
-                        </div>
-
-                    </form>
-                    {{mensaje}}
-                </div>
+<div class="agregar-container">
+    <!-- Panel Izquierdo: Formulario Manual -->
+    <div class="admin-card">
+        <div class="admin-card-header">
+            <h2 class="admin-title"><i class="fa-solid fa-pen-to-square"></i> Registro Manual de Manga</h2>
+        </div>
+        
+        {% if mensaje %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert" style="background: rgba(40, 184, 125, 0.15); border: 1px solid rgba(40, 184, 125, 0.3); color: #28b87d;">
+                <i class="fa-solid fa-circle-check"></i> {{ mensaje }}
+                <button type="button" class="close text-white" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
+        {% endif %}
+        
+        <form action="" method="post" enctype="multipart/form-data" class="formulario">
+            {% csrf_token %}
+            
+            {% for field in form %}
+                <div class="formulario__grupo">
+                    <label class="formulario__label" for="{{ field.id_for_label }}">
+                        {{ field.label }}
+                        {% if field.field.required %}<span class="text-danger">*</span>{% endif %}
+                    </label>
+                    <div class="formulario__grupo-input">
+                        {{ field }}
+                    </div>
+                    {% if field.errors %}
+                        {% for error in field.errors %}
+                            <p class="formulario__input-error text-danger"><i class="fa-solid fa-triangle-exclamation"></i> {{ error }}</p>
+                        {% endfor %}
+                    {% endif %}
+                    {% if field.help_text %}
+                        <small class="form-text text-muted">{{ field.help_text }}</small>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            
+            <div class="formulario__grupo-btn-enviar mt-4">
+                <button type="submit" class="formulario__btn">
+                    <i class="fa-solid fa-circle-plus"></i> Guardar Manga
+                </button>
+                &nbsp;&nbsp;
+                <button type="reset" class="btn btn-secondary px-4 py-2" style="border-radius: 8px; height: 50px;">
+                    Cancelar
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Panel Derecho: Carga de Excel -->
+    <div class="admin-card" style="border-color: rgba(84, 136, 163, 0.35) !important; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8), 0 0 15px rgba(84, 136, 163, 0.05) !important;">
+        <div class="admin-card-header" style="border-color: rgba(84, 136, 163, 0.15);">
+            <h2 class="admin-title" style="color: #5488a3; text-shadow: 0 0 10px rgba(84, 136, 163, 0.4);"><i class="fa-solid fa-file-excel"></i> Importación Masiva</h2>
+        </div>
+        
+        {% if mensaje_excel %}
+            <div class="alert alert-info alert-dismissible fade show" role="alert" style="background: rgba(84, 136, 163, 0.15); border: 1px solid rgba(84, 136, 163, 0.35); color: #90cdf4;">
+                <i class="fa-solid fa-info-circle"></i> {{ mensaje_excel }}
+                <button type="button" class="close text-white" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        {% endif %}
+        
+        {% if error_excel %}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert" style="background: rgba(252, 129, 129, 0.12); border: 1px solid rgba(252, 129, 129, 0.35); color: #feb2b2;">
+                <i class="fa-solid fa-circle-exclamation"></i> {{ error_excel }}
+                <button type="button" class="close text-white" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        {% endif %}
+        
+        <form action="" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <p style="color: #a8a8b3; font-size: 14px; line-height: 1.5;">Puedes subir una hoja de cálculo Excel (`.xlsx` o `.xls`) para agregar nuevos mangas o actualizar el inventario masivamente.</p>
+            
+            <div class="form-group mt-3">
+                <input type="file" name="excel_file" id="excel_file" accept=".xlsx, .xls" class="d-none" required onchange="updateFileName(this)">
+                <label for="excel_file" class="btn-file-select" id="file_label">
+                    <i class="fa-solid fa-cloud-arrow-up" style="font-size: 24px; display: block; margin-bottom: 8px; color: #5488a3;"></i>
+                    Seleccionar Archivo Excel
+                </label>
+            </div>
+            
+            <button type="submit" class="formulario__btn w-100" style="background: linear-gradient(135deg, #185e83, #1e7aa8); box-shadow: 0 4px 15px rgba(24, 94, 131, 0.4);">
+                <i class="fa-solid fa-upload"></i> Subir e Importar
+            </button>
+        </form>
+        
+        <div class="instrucciones-excel">
+            <h4 style="font-size: 14px; font-weight: 700; color: #ffffff; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+                <i class="fa-solid fa-circle-info" style="color: #5488a3;"></i> Instrucciones de formato
+            </h4>
+            <ul>
+                <li>El archivo debe contener las siguientes columnas exactas en la primera fila: <strong>ID, Título, Editorial, Precio, Descripción, Cantidad</strong>.</li>
+                <li><strong>ID</strong>: Máximo 6 caracteres alfanuméricos. Si el ID ya existe, se actualizará el manga con la nueva información.</li>
+                <li><strong>Precio</strong> y <strong>Cantidad</strong> deben ser números enteros no negativos.</li>
+                <li>Los registros que no tengan una imagen cargada se guardarán temporalmente sin ella.</li>
+            </ul>
+        </div>
+        
+        <div class="mt-4 text-center">
+            <a href="{% url 'download_manga_template' %}" class="btn btn-outline-info btn-sm px-3 py-2" style="border-radius: 20px; font-weight: 600;">
+                <i class="fa-solid fa-file-download"></i> Descargar Plantilla Excel
+            </a>
         </div>
     </div>
 </div>
 
-
-
+<script>
+    function updateFileName(input) {
+        var label = document.getElementById('file_label');
+        if (input.files && input.files.length > 0) {
+            label.innerHTML = '<i class="fa-solid fa-file-circle-check" style="font-size: 24px; display: block; margin-bottom: 8px; color: #28b87d;"></i>' + input.files[0].name;
+            label.style.borderColor = "#28b87d";
+            label.style.background = "rgba(40, 184, 125, 0.08)";
+            label.style.color = "#ffffff";
+        }
+    }
+</script>
 {% endblock %}

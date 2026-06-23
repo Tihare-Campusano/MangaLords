@@ -3,8 +3,62 @@
 {% load static %}
 
     {% block css %}
-    <link rel="stylesheet" href="{% static 'app/vistas/directorio.css' %}">
-    <link rel="stylesheet" href="{% static 'app/vistas/base.css' %}">
+    <link rel="stylesheet" href="{% static 'app/vistas/directorio.css' %}?v=2">
+    <link rel="stylesheet" href="{% static 'app/vistas/base.css' %}?v=2">
+    <style>
+        .btn-carrito-add {
+            display: inline-block;
+            background: linear-gradient(135deg, #185E83 0%, #1e7aa8 100%);
+            color: #fff !important;
+            font-family: 'Outfit', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 8px 18px;
+            border-radius: 20px;
+            text-decoration: none !important;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 4px 10px rgba(24, 94, 131, 0.3);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            margin-top: 15px;
+        }
+
+        .btn-carrito-add:hover {
+            background: linear-gradient(135deg, #1e7aa8 0%, #3197cc 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(49, 151, 204, 0.5), 0 0 8px rgba(49, 151, 204, 0.2);
+            text-decoration: none !important;
+        }
+
+        .badge-sin-stock {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #888;
+            font-family: 'Outfit', sans-serif;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            margin-top: 15px;
+            text-shadow: none;
+        }
+
+        .manga-card-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .manga-card .btn-ver-manga {
+            margin-top: 15px !important;
+            padding: 8px 18px !important;
+        }
+    </style>
     {% endblock %}
 
 
@@ -37,7 +91,14 @@
                                 <img class="img-fluid imgD" src="{{ manga.imagen.url }}" alt="{{ manga.titulo }}">
                             </a>
                         </div>
-                        <a href="{% url 'vistaManga' pk=manga.id %}" class="btn-ver-manga">Ver Manga</a>
+                        <div class="manga-card-buttons">
+                            <a href="{% url 'vistaManga' pk=manga.id %}" class="btn-ver-manga">Ver</a>
+                            {% if manga.cantidad > 0 %}
+                                <a href="{% url 'agregar_al_carrito' pk=manga.id %}" class="btn-carrito-add"><i class="fa-solid fa-cart-plus"></i> Carrito</a>
+                            {% else %}
+                                <span class="badge-sin-stock">Sin Stock</span>
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
             </div>

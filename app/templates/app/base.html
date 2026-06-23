@@ -14,13 +14,13 @@
     {% load static%}
     <link rel="icon" href="{% static 'app/img/logo.png' %}">
     {% block css %}
-    <link rel="stylesheet" href="{% static 'app/vistas/directorio.css' %}">
-    <link rel="stylesheet" href="{% static 'app/vistas/base.css' %}">
-    <link rel="stylesheet" href="{% static 'app/vistas/carrito.css' %}">
-    <link rel="stylesheet" href="{% static 'app/vistas/menu.css' %}">
-    <link rel="stylesheet" href="{% static 'app/vistas/pagar.css' %}">
-    <link rel="stylesheet" href="{% static 'app/vistas/registerStyle.css' %}">
-    <link rel="stylesheet" href="{% static 'app/vistas/vistasStilo.css' %}">
+    <link rel="stylesheet" href="{% static 'app/vistas/directorio.css' %}?v=2">
+    <link rel="stylesheet" href="{% static 'app/vistas/base.css' %}?v=2">
+    <link rel="stylesheet" href="{% static 'app/vistas/carrito.css' %}?v=2">
+    <link rel="stylesheet" href="{% static 'app/vistas/menu.css' %}?v=2">
+    <link rel="stylesheet" href="{% static 'app/vistas/pagar.css' %}?v=2">
+    <link rel="stylesheet" href="{% static 'app/vistas/registerStyle.css' %}?v=2">
+    <link rel="stylesheet" href="{% static 'app/vistas/vistasStilo.css' %}?v=2">
     {% endblock  %}
 
     <!-- Estilos en línea del perfil para evitar problemas de caché estática -->
@@ -253,7 +253,12 @@
                 <li>
                     <!--Boton Compra-->
                     <div class="boton-modal">
-                        <label for="btn-modal"><i class="fa-solid fa-cart-shopping"></i> Compra</label>
+                        <a href="{% url 'carrito' %}">
+                            <i class="fa-solid fa-cart-shopping"></i> Compra
+                            {% if cart_total_items > 0 %}
+                                <span class="badge badge-light ml-1" style="font-size: 11px; padding: 2px 6px; border-radius: 10px; color: #c91a24; font-weight: bold; background: white;">{{ cart_total_items }}</span>
+                            {% endif %}
+                        </a>
                     </div>
                 </li>
             {% else %}
@@ -261,27 +266,6 @@
                 <li><a href="{% url 'RegistroUsuario'%}">Registrarse</a></li>
             {% endif %}
         </ol>
-        
-        <!-- Ventana Modal -->
-        {% if user.is_authenticated %}
-            <input type="checkbox" id="btn-modal">
-            <div class="container-modal">
-                <div class="content-modal">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5 text-center" id="exampleModalLabel">Escoja una opción</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body text-center fw-bold">
-                        Puedes ir a pagar o puedes volver al inicio
-                    </div>
-                    <div class="modal-footer d-flex justify-content-center">
-                        <a href="{% url 'pagar'%}" class="btn btn-success">Pagar</a>
-                        <a href="{% url 'MangaLords'%}" class="btn btn-danger">Volver</a>
-                    </div>
-                </div>
-                <label for="btn-modal" class="cerrar-modal"></label>
-            </div>
-        {% endif %}
         
         <!-- responsive -->
         <label for="check" class="bar">
@@ -293,55 +277,35 @@
     {% endblock %}
 
     <div id="contenido">
+        {% if messages %}
+            <div class="container mt-3">
+                {% for message in messages %}
+                    <div class="alert alert-{% if message.tags == 'error' %}danger{% elif message.tags == 'warning' %}warning{% elif message.tags == 'success' %}success{% else %}info{% endif %} alert-dismissible fade show" role="alert" style="border-radius: 12px; font-family: 'Outfit', sans-serif; background: rgba(20, 20, 25, 0.95); border: 1px solid {% if message.tags == 'error' %}rgba(255, 51, 68, 0.4){% elif message.tags == 'success' %}rgba(40, 167, 69, 0.4){% else %}rgba(255, 193, 7, 0.4){% endif %}; color: #ffffff; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); box-shadow: 0 5px 15px rgba(0,0,0,0.5);">
+                        <div class="d-flex align-items-center">
+                            {% if message.tags == 'error' %}
+                                <i class="fa-solid fa-circle-xmark mr-2" style="color: #ff3344; font-size: 18px;"></i>
+                            {% elif message.tags == 'success' %}
+                                <i class="fa-solid fa-circle-check mr-2" style="color: #28a745; font-size: 18px;"></i>
+                            {% else %}
+                                <i class="fa-solid fa-triangle-exclamation mr-2" style="color: #ffc107; font-size: 18px;"></i>
+                            {% endif %}
+                            <span>{{ message }}</span>
+                        </div>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close" style="color: #ffffff; text-shadow: none; opacity: 0.8; outline: none;">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
         {% block contenido%}
 
         {% endblock %}
     </div>
 
 {% block footer %}
-        <!-- pie pagina -->
-        <footer class="pie-pagina">
-            <div class="grupo1">
-                <div class="boxS1">
-                    <figure>
-                        <a href="{% url 'MangaLords'%}">
-                            <img src="{% static 'app/img/logo.png' %}" alt="logo MangaLords">
-                        </a>
-                    </figure>
-                </div>
-                <div class="boxS">
-                    <h2>CONTÁCTANOS</h2>
-                    <P>DIRECCIÓN: V Región, Chile</P>
-                    <p>HORA DE ATENCIÓN: Lunes a Viernes de 10:00 AM a 19:00 PM</p>
-                    <p>E-MAIL:
-                        <a href="https://mail.google.com/mail/u/0/#inbox?compose=new">mangalords023@gmail.com</a>
-                    </p>
-                </div>
-                <div class="boxS">
-                    <h2>SÍGUENOS</h2>
-                    <div class="redSocial">
-                        <div class="r1">
-                            <a href="#">
-                                <img src="{% static 'app/img/iconFAce.png'%}" alt="">
-                            </a>
-                        </div>
-                        <div class="r2">
-                            <a href="#">
-                                <img src="{% static 'app/img/iconIg.png'%}" alt="">
-                            </a>
-                        </div>
-                        <div class="r3">
-                            <a href="#">
-                                <img src="{% static 'app/img/iconTik.png'%}" alt="">
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="grupo2">
-                <small>&copy; 2023 <b>Manga Lords</b> - Todos los Derechos Reservados.</small>
-            </div>
-        </footer>
+    {% include 'app/footer.html' %}
 {% endblock footer %}
     <script>
     document.addEventListener('DOMContentLoaded', () => {

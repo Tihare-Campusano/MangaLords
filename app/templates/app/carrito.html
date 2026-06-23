@@ -1,36 +1,483 @@
 {% extends 'app/base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block css %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'app/vistas/base.css' %}?v=2">
+    <style>
+        body {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.95)), url({% static 'app/img/fondo_deathnote.png' %});
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-attachment: fixed;
+            min-height: 100vh;
+            font-family: 'Outfit', sans-serif;
+            color: #e2e2e7;
+        }
+
+        .cart-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 15px;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .cart-title {
+            font-family: 'Cinzel', serif;
+            color: #ffffff;
+            font-size: 32px;
+            font-weight: 700;
+            text-shadow: 0 0 10px rgba(255, 51, 68, 0.4);
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .glass-panel {
+            background: rgba(18, 18, 22, 0.65);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(201, 26, 36, 0.3);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+            padding: 25px;
+        }
+
+        .cart-table-header {
+            border-bottom: 2px solid rgba(201, 26, 36, 0.4);
+            padding-bottom: 15px;
+            margin-bottom: 10px;
+            font-family: 'Cinzel', serif;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            color: #ff3344;
+            display: flex;
+        }
+
+        .header-product { flex-grow: 1; }
+        .header-price { width: 120px; text-align: center; }
+        .header-quantity { width: 150px; text-align: center; }
+        .header-subtotal { width: 140px; text-align: right; }
+        .header-options { width: 43px; }
+
+        .cart-item-row {
+            display: flex;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            transition: background 0.3s ease;
+        }
+
+        .cart-item-row:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .cart-item-img-wrapper {
+            width: 70px;
+            height: 100px;
+            border-radius: 6px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            margin-right: 20px;
+            flex-shrink: 0;
+        }
+
+        .cart-item-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .cart-item-details {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+        }
+
+        .cart-item-info {
+            flex-grow: 1;
+            padding-right: 15px;
+        }
+
+        .cart-item-title {
+            font-family: 'Cinzel', serif;
+            font-size: 18px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 4px;
+        }
+
+        .cart-item-editorial {
+            font-size: 13px;
+            color: #a8a8b3;
+            font-style: italic;
+        }
+
+        .cart-item-price {
+            font-size: 16px;
+            color: #ffffff;
+            font-weight: 600;
+            width: 120px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .cart-item-quantity {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 150px;
+            flex-shrink: 0;
+        }
+
+        .btn-qty {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.2s ease;
+        }
+
+        .btn-qty:hover:not(:disabled) {
+            background: #ff3344;
+            border-color: #ff3344;
+            box-shadow: 0 0 8px rgba(255, 51, 68, 0.5);
+            transform: scale(1.05);
+        }
+
+        .btn-qty:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .qty-display {
+            font-size: 16px;
+            font-weight: 600;
+            width: 25px;
+            text-align: center;
+            color: #ffffff;
+        }
+
+        .cart-item-subtotal {
+            font-size: 18px;
+            font-weight: 700;
+            color: #ff3344;
+            text-shadow: 0 0 5px rgba(255, 51, 68, 0.2);
+            width: 140px;
+            text-align: right;
+            flex-shrink: 0;
+        }
+
+        .btn-remove-item {
+            background: transparent;
+            border: none;
+            color: #a8a8b3;
+            font-size: 18px;
+            cursor: pointer;
+            transition: color 0.2s ease;
+            margin-left: 25px;
+            outline: none !important;
+            flex-shrink: 0;
+            width: 18px;
+            text-align: center;
+            padding: 0;
+        }
+
+        .btn-remove-item:hover {
+            color: #ff3344;
+        }
+
+        /* Sidebar Resumen */
+        .summary-panel {
+            background: rgba(18, 18, 22, 0.75);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(201, 26, 36, 0.4);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 15px rgba(201, 26, 36, 0.05);
+            padding: 30px;
+            position: sticky;
+            top: 100px;
+        }
+
+        .summary-title {
+            font-family: 'Cinzel', serif;
+            font-size: 22px;
+            font-weight: 700;
+            color: #ffffff;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 15px;
+            margin-bottom: 12px;
+            color: #a8a8b3;
+        }
+
+        .summary-total {
+            display: flex;
+            justify-content: space-between;
+            font-size: 20px;
+            font-weight: 700;
+            color: #ffffff;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 15px;
+            margin-top: 15px;
+            margin-bottom: 25px;
+        }
+
+        .summary-total .total-price {
+            color: #ff3344;
+            text-shadow: 0 0 8px rgba(255, 51, 68, 0.3);
+        }
+
+        .btn-checkout {
+            display: block;
+            width: 100%;
+            background: linear-gradient(135deg, #8f0f15 0%, #c91a24 100%);
+            color: #fff !important;
+            font-family: 'Outfit', sans-serif;
+            font-size: 15px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            padding: 14px;
+            border-radius: 30px;
+            text-align: center;
+            text-decoration: none !important;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 5px 15px rgba(201, 26, 36, 0.4);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .btn-checkout:hover {
+            background: linear-gradient(135deg, #c91a24 0%, #ff3344 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255, 51, 68, 0.6), 0 0 10px rgba(255, 51, 68, 0.3);
+        }
+
+        .btn-continue-shopping {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #a8a8b3 !important;
+            text-decoration: none !important;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.2s ease;
+            margin-top: 20px;
+        }
+
+        .btn-continue-shopping:hover {
+            color: #ffffff !important;
+        }
+
+        /* Empty state */
+        .empty-cart-container {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .empty-cart-icon {
+            font-size: 72px;
+            color: rgba(255, 255, 255, 0.15);
+            margin-bottom: 25px;
+        }
+
+        .empty-cart-title {
+            font-family: 'Cinzel', serif;
+            font-size: 24px;
+            color: #ffffff;
+            margin-bottom: 12px;
+        }
+
+        .empty-cart-text {
+            color: #a8a8b3;
+            font-size: 15px;
+            margin-bottom: 30px;
+        }
+
+        .btn-empty-action {
+            display: inline-block;
+            background: linear-gradient(135deg, #185E83 0%, #1e7aa8 100%);
+            color: #fff !important;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 12px 30px;
+            border-radius: 25px;
+            text-decoration: none !important;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 4px 12px rgba(24, 94, 131, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .btn-empty-action:hover {
+            background: linear-gradient(135deg, #1e7aa8 0%, #3197cc 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(49, 151, 204, 0.6);
+        }
+
+        /* Responsive fixes */
+        @media (max-width: 991px) {
+            .summary-panel {
+                margin-top: 30px;
+                position: static;
+            }
+        }
+
+        @media (max-width: 767px) {
+            .cart-table-header {
+                display: none;
+            }
+            .cart-item-row {
+                flex-direction: column;
+                align-items: flex-start;
+                position: relative;
+            }
+            .cart-item-details {
+                width: 100%;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .cart-item-price, .cart-item-quantity, .cart-item-subtotal {
+                width: 100%;
+                text-align: left;
+                margin-top: 10px;
+            }
+            .cart-item-quantity {
+                justify-content: flex-start;
+            }
+            .btn-remove-item {
+                position: absolute;
+                top: 20px;
+                right: 0;
+                margin: 0;
+            }
+        }
+    </style>
+{% endblock %}
 
 {% block contenido %}
-{% load humanize %}
-<br>
-<br>
-<br>
-<div class="card">
-    <div class="card-body">
-        <h2 class="text-center" style="font-family: 'Helvetica Neue'">Bolsa de compras</h2>
-        <hr>
-        <table class="table table-stripped table-hover table-responsive-sm">
-            <tr>
-                <th>Titulo</th>
-                <th>Precio</th>
-                <th>Editorial</th>
-                <th>Opciones</th>
-            </tr>
+<div class="cart-container">
+    <h1 class="cart-title">Bolsa de Compras</h1>
 
-            {% for manga in manga %}
-                <tr>
-                    <td>{{ manga.titulo | title }}</td>
-                    <td>${{ manga.precio | intcomma }}</td>
-                    <td>{{ manga.editorial | title }}</td>
-                    <td>
-                        <a href="{% url 'carrito' %}" class="btn btn-info btn-sm">Pagar</a>
-                        <a href="{% url 'eliminar_producto' p.id %}" class="btn btn-danger btn-sm">Eliminar</a>
-                    </td>
-                </tr>
-            {% endfor %}
-        </table>
-    </div>
+    {% if mangas %}
+        <div class="row">
+            <!-- Listado de Productos -->
+            <div class="col-lg-8">
+                <div class="glass-panel">
+                    <div class="cart-table-header">
+                        <div class="header-product">Producto</div>
+                        <div class="header-price">Precio</div>
+                        <div class="header-quantity">Cantidad</div>
+                        <div class="header-subtotal">Subtotal</div>
+                        <div class="header-options"></div>
+                    </div>
+
+                    {% for item in mangas %}
+                        <div class="cart-item-row">
+                            <div class="cart-item-img-wrapper">
+                                <img src="{{ item.manga.imagen.url }}" alt="{{ item.manga.titulo }}" class="cart-item-img">
+                            </div>
+                            <div class="cart-item-details">
+                                <div class="cart-item-info">
+                                    <h3 class="cart-item-title">{{ item.manga.titulo }}</h3>
+                                    <span class="cart-item-editorial">{{ item.manga.editorial }}</span>
+                                </div>
+                                <div class="cart-item-price">
+                                    ${{ item.manga.precio|intcomma }}
+                                </div>
+                                <div class="cart-item-quantity">
+                                    <!-- Form decrementar cantidad -->
+                                    <form action="{% url 'actualizar_cantidad_carrito' item.manga.id %}" method="POST">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="quantity" value="{{ item.quantity|add:-1 }}">
+                                        <button type="submit" class="btn-qty" {% if item.quantity <= 1 %}disabled{% endif %}>-</button>
+                                    </form>
+                                    <span class="qty-display">{{ item.quantity }}</span>
+                                    <!-- Form incrementar cantidad -->
+                                    <form action="{% url 'actualizar_cantidad_carrito' item.manga.id %}" method="POST">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="quantity" value="{{ item.quantity|add:1 }}">
+                                        <button type="submit" class="btn-qty" {% if item.quantity >= item.manga.cantidad %}disabled{% endif %}>+</button>
+                                    </form>
+                                </div>
+                                <div class="cart-item-subtotal">
+                                    ${{ item.subtotal|intcomma }}
+                                </div>
+                                <a href="{% url 'eliminar_del_carrito' item.manga.id %}" class="btn-remove-item" title="Eliminar del carrito">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                </a>
+                            </div>
+                        </div>
+                    {% endfor %}
+
+                    <a href="{% url 'directorio' %}" class="btn-continue-shopping">
+                        <i class="fa-solid fa-arrow-left"></i> Seguir Comprando
+                    </a>
+                </div>
+            </div>
+
+            <!-- Resumen de Compra -->
+            <div class="col-lg-4">
+                <div class="summary-panel">
+                    <h2 class="summary-title">Resumen de Orden</h2>
+                    
+                    <div class="summary-row">
+                        <span>Total de ítems</span>
+                        <span>{{ total_items }}</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Subtotal</span>
+                        <span>${{ total_price|intcomma }}</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Envío</span>
+                        <span class="text-success font-weight-bold">Gratis</span>
+                    </div>
+                    
+                    <div class="summary-total">
+                        <span>Total</span>
+                        <span class="total-price">${{ total_price|intcomma }}</span>
+                    </div>
+
+                    <a href="{% url 'pagar' %}" class="btn-checkout">
+                        Proceder al Pago <i class="fa-solid fa-credit-card ml-2"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="glass-panel">
+            <div class="empty-cart-container">
+                <div class="empty-cart-icon">
+                    <i class="fa-solid fa-bag-shopping"></i>
+                </div>
+                <h2 class="empty-cart-title">Tu carrito está vacío</h2>
+                <p class="empty-cart-text">¿Aún no te decides? ¡Revisa nuestro increíble catálogo de mangas y encuentra tus favoritos!</p>
+                <a href="{% url 'directorio' %}" class="btn-empty-action">
+                    Explorar Catálogo
+                </a>
+            </div>
+        </div>
+    {% endif %}
 </div>
-
-
 {% endblock %}

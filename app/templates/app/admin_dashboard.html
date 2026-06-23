@@ -1,0 +1,244 @@
+{% extends 'app/admin.html' %}
+{% load static %}
+
+{% block admin_contenido %}
+<style>
+    /* Estilos del Dashboard */
+    .dashboard-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 25px;
+        margin-bottom: 40px;
+    }
+    .stats-card {
+        background: rgba(18, 18, 22, 0.65);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(201, 26, 36, 0.25);
+        border-radius: 12px;
+        padding: 25px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        cursor: pointer;
+    }
+    .stats-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.8), 0 0 15px rgba(255, 51, 68, 0.4);
+        border-color: #ff3344;
+    }
+    .stats-info h3 {
+        font-family: 'Outfit', sans-serif;
+        font-size: 14px;
+        color: #a8a8b3;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin: 0 0 8px 0;
+    }
+    .stats-number {
+        font-family: 'Outfit', sans-serif;
+        font-size: 32px;
+        font-weight: 700;
+        color: #ffffff;
+        margin: 0;
+    }
+    .stats-icon {
+        font-size: 40px;
+        color: #ff3344;
+        text-shadow: 0 0 10px rgba(255, 51, 68, 0.4);
+        opacity: 0.85;
+    }
+    
+    .dashboard-sections {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 30px;
+    }
+    @media screen and (max-width: 992px) {
+        .dashboard-sections {
+            grid-template-columns: 1fr;
+        }
+    }
+    
+    .recent-mangas-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    .recent-manga-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 15px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        transition: background 0.2s ease;
+    }
+    .recent-manga-item:last-child {
+        border-bottom: none;
+    }
+    .recent-manga-item:hover {
+        background: rgba(255, 255, 255, 0.02);
+    }
+    .recent-manga-info {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+    .recent-manga-img {
+        width: 45px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 6px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .recent-manga-no-img {
+        width: 45px;
+        height: 60px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #718096;
+    }
+    .recent-manga-meta {
+        display: flex;
+        flex-direction: column;
+    }
+    .recent-manga-title {
+        font-weight: 600;
+        color: #ffffff;
+        font-size: 15px;
+    }
+    .recent-manga-editorial {
+        font-size: 12px;
+        color: #a8a8b3;
+    }
+    
+    .quick-actions-card {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+    .action-btn-dashboard {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 14px 20px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 8px;
+        color: #e2e2e7 !important;
+        text-decoration: none !important;
+        font-weight: 600;
+        transition: all 0.25s ease;
+    }
+    .action-btn-dashboard:hover {
+        background: rgba(201, 26, 36, 0.12);
+        border-color: #ff3344;
+        padding-left: 25px;
+    }
+    .action-btn-dashboard i {
+        color: #ff3344;
+    }
+</style>
+
+<div class="dashboard-grid">
+    <!-- Tarjeta 1: Total Mangas -->
+    <div class="stats-card" onclick="window.location.href='{% url 'listar_productos' %}'">
+        <div class="stats-info">
+            <h3>Mangas en Catálogo</h3>
+            <p class="stats-number">{{ total_mangas }}</p>
+        </div>
+        <div class="stats-icon">
+            <i class="fa-solid fa-book-open"></i>
+        </div>
+    </div>
+
+    <!-- Tarjeta 2: Stock Total -->
+    <div class="stats-card" onclick="window.location.href='{% url 'listar_productos' %}'">
+        <div class="stats-info">
+            <h3>Stock Total (Copias)</h3>
+            <p class="stats-number">{{ total_stock }}</p>
+        </div>
+        <div class="stats-icon">
+            <i class="fa-solid fa-boxes-stacked"></i>
+        </div>
+    </div>
+
+    <!-- Tarjeta 3: Usuarios Registrados -->
+    <div class="stats-card" onclick="window.location.href='{% url 'listar_productos' %}'">
+        <div class="stats-info">
+            <h3>Usuarios Registrados</h3>
+            <p class="stats-number">{{ total_users }}</p>
+        </div>
+        <div class="stats-icon">
+            <i class="fa-solid fa-users"></i>
+        </div>
+    </div>
+</div>
+
+<div class="dashboard-sections">
+    <!-- Seccion Izquierda: Catálogo Reciente -->
+    <div class="admin-card">
+        <div class="admin-card-header">
+            <h2 class="admin-title">Catálogo Reciente</h2>
+        </div>
+        {% if mangas_recientes %}
+            <ul class="recent-mangas-list">
+                {% for m in mangas_recientes %}
+                    <li class="recent-manga-item">
+                        <div class="recent-manga-info">
+                            {% if m.imagen %}
+                                <img src="{{ m.imagen.url }}" alt="{{ m.titulo }}" class="recent-manga-img">
+                            {% else %}
+                                <div class="recent-manga-no-img">
+                                    <i class="fa-solid fa-image"></i>
+                                </div>
+                            {% endif %}
+                            <div class="recent-manga-meta">
+                                <span class="recent-manga-title">{{ m.titulo }}</span>
+                                <span class="recent-manga-editorial">{{ m.editorial }} | Stock: {{ m.cantidad }}</span>
+                            </div>
+                        </div>
+                        <div>
+                            <span style="font-weight: 700; color: #ff3344; font-size: 16px;">${{ m.precio }}</span>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="text-muted text-center my-4">No hay mangas registrados en el sistema.</p>
+        {% endif %}
+    </div>
+
+    <!-- Seccion Derecha: Acciones Rápidas -->
+    <div class="admin-card">
+        <div class="admin-card-header">
+            <h2 class="admin-title" style="color: #5488a3; text-shadow: 0 0 10px rgba(84, 136, 163, 0.4);">Acciones Rápidas</h2>
+        </div>
+        <div class="quick-actions-card">
+            <a href="{% url 'agregar_producto' %}" class="action-btn-dashboard">
+                <span><i class="fa-solid fa-plus-circle"></i> Nuevo Manga</span>
+                <i class="fa-solid fa-chevron-right"></i>
+            </a>
+            <a href="{% url 'listar_productos' %}" class="action-btn-dashboard">
+                <span><i class="fa-solid fa-list"></i> Ver Listados</span>
+                <i class="fa-solid fa-chevron-right"></i>
+            </a>
+            <a href="{% url 'download_manga_template' %}" class="action-btn-dashboard">
+                <span><i class="fa-solid fa-file-arrow-down"></i> Descargar Plantilla</span>
+                <i class="fa-solid fa-chevron-right"></i>
+            </a>
+            <a href="{% url 'export_mangas_excel' %}" class="action-btn-dashboard">
+                <span><i class="fa-solid fa-file-excel"></i> Exportar Mangas Excel</span>
+                <i class="fa-solid fa-chevron-right"></i>
+            </a>
+            <a href="{% url 'export_mangas_pdf' %}" class="action-btn-dashboard">
+                <span><i class="fa-solid fa-file-pdf"></i> Exportar Mangas PDF</span>
+                <i class="fa-solid fa-chevron-right"></i>
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

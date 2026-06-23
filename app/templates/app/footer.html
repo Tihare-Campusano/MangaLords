@@ -1,0 +1,44 @@
+{% load static %}
+<!-- pie pagina -->
+<footer class="pie-pagina">
+    <div class="grupo1">
+        <div class="boxS1">
+            <figure>
+                <a href="{% url 'MangaLords' %}">
+                    <img src="{% static 'app/img/logo.png' %}" alt="logo MangaLords">
+                </a>
+            </figure>
+        </div>
+        <div class="boxS">
+            <h2>CONTÁCTANOS</h2>
+            <p>DIRECCIÓN: V Región, Chile</p>
+            <p>HORA DE ATENCIÓN: Lunes a Viernes de 10:00 AM a 19:00 PM</p>
+            <p>E-MAIL:
+                <a href="https://mail.google.com/mail/u/0/#inbox?compose=new">mangalords023@gmail.com</a>
+            </p>
+        </div>
+        <div class="boxS">
+            <h2>SÍGUENOS</h2>
+            <div class="redSocial">
+                <div class="r1">
+                    <a href="#">
+                        <img src="{% static 'app/img/iconFAce.png' %}" alt="Facebook">
+                    </a>
+                </div>
+                <div class="r2">
+                    <a href="#">
+                        <img src="{% static 'app/img/iconIg.png' %}" alt="Instagram">
+                    </a>
+                </div>
+                <div class="r3">
+                    <a href="#">
+                        <img src="{% static 'app/img/iconTik.png' %}" alt="TikTok">
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="grupo2">
+        <small>&copy; 2023 <b>Manga Lords</b> - Todos los Derechos Reservados.</small>
+    </div>
+</footer>

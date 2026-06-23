@@ -7,6 +7,42 @@ class CrudForm(forms.ModelForm):
     class Meta:
         model = Manga
         fields = '__all__'
+        widgets = {
+            'id': forms.TextInput(attrs={
+                'class': 'formulario__input', 
+                'placeholder': 'Ej: MNG001', 
+                'maxlength': '6',
+                'pattern': '[a-zA-Z0-9]{1,6}'
+            }),
+            'titulo': forms.TextInput(attrs={
+                'class': 'formulario__input', 
+                'placeholder': 'Título del Manga (Ej: Berserk Vol. 1)'
+            }),
+            'editorial': forms.TextInput(attrs={
+                'class': 'formulario__input', 
+                'placeholder': 'Editorial (Ej: Panini, Ivrea)'
+            }),
+            'precio': forms.NumberInput(attrs={
+                'class': 'formulario__input', 
+                'placeholder': 'Precio en CLP (Ej: 9990)',
+                'min': '0'
+            }),
+            'descripcion': forms.Textarea(attrs={
+                'class': 'formulario__input', 
+                'placeholder': 'Descripción detallada del manga...', 
+                'rows': 4
+            }),
+            'cantidad': forms.NumberInput(attrs={
+                'class': 'formulario__input', 
+                'placeholder': 'Stock disponible (Ej: 15)',
+                'min': '0'
+            }),
+            'imagen': forms.FileInput(attrs={
+                'class': 'form-control-file text-white-50 mt-1',
+                'accept': 'image/*'
+            }),
+        }
+
     
 
 #parte deni
