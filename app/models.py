@@ -66,3 +66,33 @@ class Contacto(models.Model):
         return self.nombre
     
     #recuerda revisar el admin y agregar el contacto
+
+
+class Pedido(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='pedidos')
+    transaction_id = models.CharField(max_length=50, unique=True, verbose_name="ID de Transacción")
+    nombre = models.CharField(max_length=200, verbose_name="Nombre Completo")
+    email = models.EmailField(verbose_name="Email")
+    telefono = models.CharField(max_length=20, verbose_name="Teléfono")
+    direccion = models.CharField(max_length=500, verbose_name="Dirección")
+    total_price = models.IntegerField(verbose_name="Total Pagado")
+    fecha = models.DateTimeField(auto_now_add=True, verbose_name="Fecha de Compra")
+    tarjeta_ultimos_cuatro = models.CharField(max_length=4, verbose_name="Últimos 4 dígitos")
+
+    def __str__(self):
+        return f"Pedido {self.transaction_id} - {self.user.username}"
+
+
+class DetallePedido(models.Model):
+    pedido = models.ForeignKey(Pedido, on_delete=models.CASCADE, related_name='detalles')
+    manga_titulo = models.CharField(max_length=100, verbose_name="Título del Manga")
+    manga_editorial = models.CharField(max_length=100, verbose_name="Editorial")
+    precio_unitario = models.IntegerField(verbose_name="Precio Unitario")
+    cantidad = models.IntegerField(verbose_name="Cantidad")
+    subtotal = models.IntegerField(verbose_name="Subtotal")
+    manga = models.ForeignKey(Manga, on_delete=models.SET_NULL, null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.manga_titulo} x {self.cantidad}"
+
+

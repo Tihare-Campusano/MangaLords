@@ -430,9 +430,16 @@
                         </div>
                     {% endfor %}
 
-                    <a href="{% url 'directorio' %}" class="btn-continue-shopping">
-                        <i class="fa-solid fa-arrow-left"></i> Seguir Comprando
-                    </a>
+                    <div class="d-flex justify-content-between align-items-center flex-wrap">
+                        <a href="{% url 'directorio' %}" class="btn-continue-shopping">
+                            <i class="fa-solid fa-arrow-left"></i> Seguir Comprando
+                        </a>
+                        {% if user.pedidos.exists %}
+                            <a href="{% url 'compras_realizadas' %}" class="btn-continue-shopping mt-0" style="margin-top: 20px !important;">
+                                <i class="fa-solid fa-clock-rotate-left mr-1"></i> Ver Compras Anteriores
+                            </a>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
 
@@ -473,9 +480,16 @@
                 </div>
                 <h2 class="empty-cart-title">Tu carrito está vacío</h2>
                 <p class="empty-cart-text">¿Aún no te decides? ¡Revisa nuestro increíble catálogo de mangas y encuentra tus favoritos!</p>
-                <a href="{% url 'directorio' %}" class="btn-empty-action">
-                    Explorar Catálogo
-                </a>
+                <div class="d-flex justify-content-center align-items-center flex-wrap" style="gap: 15px;">
+                    <a href="{% url 'directorio' %}" class="btn-empty-action">
+                        Explorar Catálogo
+                    </a>
+                    {% if user.pedidos.exists %}
+                        <a href="{% url 'compras_realizadas' %}" class="btn-empty-action" style="background: rgba(255, 255, 255, 0.05); border-color: rgba(255, 255, 255, 0.15); box-shadow: none;">
+                            <i class="fa-solid fa-clock-rotate-left mr-2"></i> Ver Mis Compras
+                        </a>
+                    {% endif %}
+                </div>
             </div>
         </div>
     {% endif %}

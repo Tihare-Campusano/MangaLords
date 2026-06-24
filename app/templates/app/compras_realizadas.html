@@ -1,0 +1,332 @@
+{% extends 'app/base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block css %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'app/vistas/base.css' %}?v=2">
+    <style>
+        body {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.95)), url({% static 'app/img/fondo_deathnote.png' %});
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-attachment: fixed;
+            min-height: 100vh;
+            font-family: 'Outfit', sans-serif;
+            color: #e2e2e7;
+        }
+
+        .history-container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 15px;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .history-title {
+            font-family: 'Cinzel', serif;
+            color: #ffffff;
+            font-size: 32px;
+            font-weight: 700;
+            text-shadow: 0 0 10px rgba(255, 51, 68, 0.4);
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .order-card {
+            background: rgba(18, 18, 22, 0.65);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+            padding: 25px;
+            margin-bottom: 25px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .order-card:hover {
+            border-color: rgba(201, 26, 36, 0.4);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.9), 0 0 15px rgba(201, 26, 36, 0.1);
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        .order-meta-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .meta-label {
+            font-size: 12px;
+            color: #888896;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 3px;
+        }
+
+        .meta-value {
+            font-size: 15px;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .order-total-value {
+            color: #ff3344 !important;
+            text-shadow: 0 0 5px rgba(255, 51, 68, 0.2);
+            font-size: 17px;
+        }
+
+        .order-details-title {
+            font-family: 'Cinzel', serif;
+            font-size: 14px;
+            color: #ff3344;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+
+        .order-item-row {
+            display: flex;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .order-item-row:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .order-item-img-wrapper {
+            width: 45px;
+            height: 65px;
+            border-radius: 4px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+            margin-right: 15px;
+            flex-shrink: 0;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .order-item-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .order-item-no-img {
+            font-size: 20px;
+            color: #4a5568;
+        }
+
+        .order-item-details {
+            flex-grow: 1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .order-item-name-box {
+            flex-grow: 1;
+            padding-right: 15px;
+        }
+
+        .order-item-name {
+            font-family: 'Cinzel', serif;
+            font-size: 15px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 2px;
+        }
+
+        .order-item-editorial {
+            font-size: 12px;
+            color: #a8a8b3;
+            font-style: italic;
+        }
+
+        .order-item-qty {
+            font-size: 14px;
+            color: #a8a8b3;
+            width: 80px;
+            text-align: center;
+        }
+
+        .order-item-price {
+            font-size: 14px;
+            color: #a8a8b3;
+            width: 100px;
+            text-align: center;
+        }
+
+        .order-item-subtotal {
+            font-size: 15px;
+            font-weight: 600;
+            color: #ffffff;
+            width: 110px;
+            text-align: right;
+        }
+
+        /* Empty state */
+        .empty-history-container {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .empty-history-icon {
+            font-size: 72px;
+            color: rgba(255, 255, 255, 0.1);
+            margin-bottom: 25px;
+        }
+
+        .empty-history-title {
+            font-family: 'Cinzel', serif;
+            font-size: 24px;
+            color: #ffffff;
+            margin-bottom: 12px;
+        }
+
+        .empty-history-text {
+            color: #a8a8b3;
+            font-size: 15px;
+            margin-bottom: 30px;
+        }
+
+        .btn-empty-action {
+            display: inline-block;
+            background: linear-gradient(135deg, #185E83 0%, #1e7aa8 100%);
+            color: #fff !important;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 12px 30px;
+            border-radius: 25px;
+            text-decoration: none !important;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 4px 12px rgba(24, 94, 131, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .btn-empty-action:hover {
+            background: linear-gradient(135deg, #1e7aa8 0%, #3197cc 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(49, 151, 204, 0.6);
+        }
+
+        /* Responsive */
+        @media (max-width: 767px) {
+            .order-item-row {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .order-item-details {
+                width: 100%;
+                flex-direction: column;
+                align-items: flex-start;
+                margin-top: 10px;
+            }
+            .order-item-qty, .order-item-price, .order-item-subtotal {
+                width: 100%;
+                text-align: left;
+                margin-top: 5px;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block contenido %}
+<div class="history-container">
+    <h1 class="history-title">Compras Realizadas</h1>
+
+    {% if pedidos %}
+        {% for pedido in pedidos %}
+            <div class="order-card">
+                <!-- Encabezado del Pedido -->
+                <div class="order-header">
+                    <div class="order-meta-item">
+                        <span class="meta-label">Fecha de Compra</span>
+                        <span class="meta-value">{{ pedido.fecha|date:"d/m/Y H:i" }}</span>
+                    </div>
+                    <div class="order-meta-item">
+                        <span class="meta-label">ID de Transacción</span>
+                        <span class="meta-value" style="font-family: monospace; color: #ff3344;">{{ pedido.transaction_id }}</span>
+                    </div>
+                    <div class="order-meta-item">
+                        <span class="meta-label">Pago Seguro</span>
+                        <span class="meta-value" style="font-size: 14px;"><i class="fa-solid fa-credit-card mr-1" style="color: #a8a8b3;"></i> **** {{ pedido.tarjeta_ultimos_cuatro }}</span>
+                    </div>
+                    <div class="order-meta-item">
+                        <span class="meta-label">Total de Compra</span>
+                        <span class="meta-value order-total-value">${{ pedido.total_price|intcomma }}</span>
+                    </div>
+                </div>
+
+                <!-- Detalles de envío -->
+                <div class="mb-4" style="font-size: 14px;">
+                    <span class="meta-label">Dirección de Envío:</span>
+                    <span class="text-white font-weight-500 ml-1">{{ pedido.direccion }}</span>
+                </div>
+
+                <!-- Lista de artículos -->
+                <div class="order-items-box">
+                    <h3 class="order-details-title">Artículos Adquiridos</h3>
+                    {% for item in pedido.detalles.all %}
+                        <div class="order-item-row">
+                            <div class="order-item-img-wrapper">
+                                {% if item.manga and item.manga.imagen %}
+                                    <img src="{{ item.manga.imagen.url }}" alt="{{ item.manga_titulo }}" class="order-item-img">
+                                {% else %}
+                                    <div class="order-item-no-img"><i class="fa-solid fa-book"></i></div>
+                                {% endif %}
+                            </div>
+                            <div class="order-item-details">
+                                <div class="order-item-name-box">
+                                    <h4 class="order-item-name">{{ item.manga_titulo }}</h4>
+                                    <span class="order-item-editorial">{{ item.manga_editorial }}</span>
+                                </div>
+                                <div class="order-item-price">
+                                    ${{ item.precio_unitario|intcomma }} c/u
+                                </div>
+                                <div class="order-item-qty">
+                                    Cant: {{ item.cantidad }}
+                                </div>
+                                <div class="order-item-subtotal">
+                                    ${{ item.subtotal|intcomma }}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="order-card">
+            <div class="empty-history-container">
+                <div class="empty-history-icon">
+                    <i class="fa-solid fa-clock-rotate-left"></i>
+                </div>
+                <h2 class="empty-history-title">Sin Compras Aún</h2>
+                <p class="empty-history-text">Todavía no has realizado ninguna compra en nuestra plataforma. ¡Anímate a explorar nuestro catálogo de mangas!</p>
+                <a href="{% url 'directorio' %}" class="btn-empty-action">
+                    Explorar Catálogo
+                </a>
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

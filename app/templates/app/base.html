@@ -222,6 +222,9 @@
                     </div>
                     <div class="dropdown-divider"></div>
                     <a href="{% url 'perfil' %}" class="dropdown-item-link"><i class="fa-solid fa-user-gear"></i> Mi Perfil</a>
+                    {% if user.pedidos.exists %}
+                        <a href="{% url 'compras_realizadas' %}" class="dropdown-item-link"><i class="fa-solid fa-clock-rotate-left"></i> Compras Realizadas</a>
+                    {% endif %}
                     {% if user.is_staff %}
                         <a href="{% url 'agregar_producto' %}" class="dropdown-item-link"><i class="fa-solid fa-screwdriver-wrench"></i> Administración</a>
                     {% endif %}

@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Manga, RegistroUsuario
+from .models import Manga, RegistroUsuario, Pedido, DetallePedido
 from .registroCli import registroClient
 from django.contrib.auth import authenticate, login, logout
 from .forms import CrudForm, ContactoForm, PerfilForm
@@ -144,8 +144,23 @@ def pagar(request):
             messages.error(request, "Por favor rellena todos los campos requeridos.")
         else:
             try:
+                card_last_four = card_num[-4:] if len(card_num) >= 4 else card_num
+                tx_id = f"ML-{random.randint(100000, 999999)}"
+                
                 with transaction.atomic():
-                    # Check and update stock under lock
+                    # Create database order first
+                    pedido = Pedido.objects.create(
+                        user=request.user,
+                        transaction_id=tx_id,
+                        nombre=nombre,
+                        email=email,
+                        telefono=telefono,
+                        direccion=f"{direccion}, {ciudad}, {region}",
+                        total_price=total_price,
+                        tarjeta_ultimos_cuatro=card_last_four
+                    )
+                    
+                    # Check and update stock under lock, and create order items
                     items_purchased = []
                     for item in mangas_in_cart:
                         manga = Manga.objects.select_for_update().get(pk=item['manga'].pk)
@@ -153,6 +168,18 @@ def pagar(request):
                             raise ValidationError(f"Stock insuficiente para {manga.titulo}.")
                         manga.cantidad -= item['quantity']
                         manga.save()
+                        
+                        # Create detail record
+                        DetallePedido.objects.create(
+                            pedido=pedido,
+                            manga_titulo=manga.titulo,
+                            manga_editorial=manga.editorial,
+                            precio_unitario=manga.precio,
+                            cantidad=item['quantity'],
+                            subtotal=item['subtotal'],
+                            manga=manga
+                        )
+                        
                         items_purchased.append({
                             'titulo': manga.titulo,
                             'editorial': manga.editorial,
@@ -167,7 +194,7 @@ def pagar(request):
                         'total_price': total_price,
                         'nombre': nombre,
                         'direccion': f"{direccion}, {ciudad}, {region}",
-                        'transaction_id': f"ML-{random.randint(100000, 999999)}"
+                        'transaction_id': tx_id
                     }
                     
                     # Clear cart
@@ -1209,4 +1236,14 @@ def pago_exitoso(request):
         request.session.modified = True
         
     return render(request, 'app/pago_exitoso.html', context)
+
+
+@login_required
+def compras_realizadas(request):
+    pedidos = Pedido.objects.filter(user=request.user).order_by('-fecha').prefetch_related('detalles__manga')
+    context = {
+        'pedidos': pedidos
+    }
+    return render(request, 'app/compras_realizadas.html', context)
+
 

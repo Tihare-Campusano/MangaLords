@@ -6,7 +6,7 @@ from .views import (MangaLords, carrito, directorio, inicioSecion, pagar, Regist
                     search_suggestions, perfil, export_mangas_excel, export_mangas_pdf,
                     export_users_excel, export_users_pdf, download_manga_template,
                     agregar_al_carrito, eliminar_del_carrito, actualizar_cantidad_carrito,
-                    pago_exitoso)
+                    pago_exitoso, compras_realizadas)
 
 # imagenes
 from django.conf import settings
@@ -19,6 +19,7 @@ urlpatterns = [
     path('carrito/eliminar/<str:pk>/', eliminar_del_carrito, name='eliminar_del_carrito'),
     path('carrito/actualizar/<str:pk>/', actualizar_cantidad_carrito, name='actualizar_cantidad_carrito'),
     path('pago_exitoso/', pago_exitoso, name='pago_exitoso'),
+    path('compras/', compras_realizadas, name='compras_realizadas'),
     path('administrador/', admin, name='admin'),
     path('directorio/',directorio, name="directorio"),
     path('inicioSecion/',inicioSecion, name='inicioSecion'),
