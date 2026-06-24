@@ -94,7 +94,9 @@
                         <div class="manga-card-buttons">
                             <a href="{% url 'vistaManga' pk=manga.id %}" class="btn-ver-manga">Ver</a>
                             {% if manga.cantidad > 0 %}
-                                <a href="{% url 'agregar_al_carrito' pk=manga.id %}" class="btn-carrito-add"><i class="fa-solid fa-cart-plus"></i> Carrito</a>
+                                {% if not user.is_staff %}
+                                    <a href="{% url 'agregar_al_carrito' pk=manga.id %}" class="btn-carrito-add"><i class="fa-solid fa-cart-plus"></i> Carrito</a>
+                                {% endif %}
                             {% else %}
                                 <span class="badge-sin-stock">Sin Stock</span>
                             {% endif %}

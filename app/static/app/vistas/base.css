@@ -5,6 +5,16 @@
     box-sizing: border-box;
 }
 
+/* Ocultar flechas incrementales en inputs numéricos */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+input[type=number] {
+    -moz-appearance: textfield;
+}
+
 body {
     font-family: 'Outfit', sans-serif;
     color: #e2e2e7;

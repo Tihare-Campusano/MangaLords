@@ -107,6 +107,8 @@
                             <input type="text" 
                                    name="telefono" 
                                    maxlength="9" 
+                                   pattern="[0-9]{9}"
+                                   inputmode="numeric"
                                    required 
                                    id="id_telefono" 
                                    class="formulario__input" 
@@ -134,4 +136,27 @@
         </div>
     </section>
 </div>
+{% endblock %}
+
+{% block js %}
+{{ block.super }}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const telefonoInput = document.getElementById('id_telefono');
+        if (telefonoInput) {
+            telefonoInput.addEventListener('input', (e) => {
+                e.target.value = e.target.value.replace(/\D/g, '');
+                if (e.target.value.length > 9) {
+                    e.target.value = e.target.value.slice(0, 9);
+                }
+            });
+            telefonoInput.addEventListener('paste', (e) => {
+                e.preventDefault();
+                const pastedData = (e.clipboardData || window.clipboardData).getData('text');
+                const cleanedData = pastedData.replace(/\D/g, '').slice(0, 9);
+                e.target.value = cleanedData;
+            });
+        }
+    });
+</script>
 {% endblock %}

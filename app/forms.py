@@ -37,6 +37,12 @@ class CrudForm(forms.ModelForm):
                 'placeholder': 'Stock disponible (Ej: 15)',
                 'min': '0'
             }),
+            'descuento': forms.NumberInput(attrs={
+                'class': 'formulario__input',
+                'placeholder': 'Descuento en % (Ej: 20)',
+                'min': '0',
+                'max': '100'
+            }),
             'imagen': forms.FileInput(attrs={
                 'class': 'form-control-file text-white-50 mt-1',
                 'accept': 'image/*'
@@ -60,7 +66,7 @@ class ContactoForm(forms.ModelForm):
     
     class Meta:
         model = Contacto
-        fields = '__all__'
+        exclude = ['user', 'respuesta', 'respondido', 'fecha_creacion', 'fecha_respuesta']
         widgets = {
             'nombre': forms.TextInput(attrs={'class': 'formulario__input', 'placeholder': 'Ingresa tu nombre'}),
             'email': forms.EmailInput(attrs={'class': 'formulario__input', 'placeholder': 'ejemplo@correo.com'}),

@@ -6,7 +6,8 @@ from .views import (MangaLords, carrito, directorio, inicioSecion, pagar, Regist
                     search_suggestions, perfil, export_mangas_excel, export_mangas_pdf,
                     export_users_excel, export_users_pdf, download_manga_template,
                     agregar_al_carrito, eliminar_del_carrito, actualizar_cantidad_carrito,
-                    pago_exitoso, compras_realizadas)
+                    pago_exitoso, compras_realizadas, toggle_user_role, responder_contacto,
+                    get_notifications, mark_notification_read, mark_all_notifications_read)
 
 # imagenes
 from django.conf import settings
@@ -51,6 +52,13 @@ urlpatterns = [
     path('administrador/exportar/usuarios/excel/', export_users_excel, name="export_users_excel"),
     path('administrador/exportar/usuarios/pdf/', export_users_pdf, name="export_users_pdf"),
     path('administrador/plantilla-excel/', download_manga_template, name="download_manga_template"),
+    path('administrador/usuario/cambiar-rol/<str:username>/', toggle_user_role, name='toggle_user_role'),
+    path('administrador/mensajes/responder/<int:pk>/', responder_contacto, name='responder_contacto'),
+    
+    # Notificaciones API
+    path('notificaciones/', get_notifications, name='get_notifications'),
+    path('notificaciones/leer/<int:pk>/', mark_notification_read, name='mark_notification_read'),
+    path('notificaciones/leer-todas/', mark_all_notifications_read, name='mark_all_notifications_read'),
     
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

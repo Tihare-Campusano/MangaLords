@@ -452,5 +452,54 @@ function doResetPassword() {
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') closeResetModal();
 });
+
+// ── Validaciones de Login ─────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+    const loginForm = document.querySelector('form');
+    if (loginForm) {
+        loginForm.addEventListener('submit', (e) => {
+            // Eliminar errores anteriores de JS
+            document.querySelectorAll('.js-error').forEach(el => el.remove());
+            let hasErrors = false;
+
+            const showError = (fieldId, message) => {
+                hasErrors = true;
+                const inputField = document.getElementById(fieldId);
+                if (inputField) {
+                    const fieldGroup = inputField.closest('.formulario__grupo');
+                    if (fieldGroup) {
+                        const errorP = document.createElement('p');
+                        errorP.className = 'formulario__input-error js-error';
+                        errorP.style.display = 'block';
+                        errorP.innerHTML = `<i class="fa-solid fa-circle-exclamation"></i> ${message}`;
+                        fieldGroup.appendChild(errorP);
+                    }
+                }
+            };
+
+            const usernameInput = document.getElementById('id_username');
+            if (usernameInput) {
+                const val = usernameInput.value.trim();
+                if (!val) {
+                    showError('id_username', 'El correo electrónico es requerido.');
+                } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) {
+                    showError('id_username', 'Por favor ingresa un correo electrónico válido.');
+                }
+            }
+
+            const passwordInput = document.getElementById('id_password');
+            if (passwordInput) {
+                const val = passwordInput.value;
+                if (!val) {
+                    showError('id_password', 'La contraseña es requerida.');
+                }
+            }
+
+            if (hasErrors) {
+                e.preventDefault();
+            }
+        });
+    }
+});
 </script>
 {% endblock %}

@@ -258,6 +258,12 @@
             <div class="order-card">
                 <!-- Encabezado del Pedido -->
                 <div class="order-header">
+                    {% if user.is_staff %}
+                    <div class="order-meta-item">
+                        <span class="meta-label">Usuario / Cliente</span>
+                        <span class="meta-value" style="color: #5488a3;">{{ pedido.user.username }}</span>
+                    </div>
+                    {% endif %}
                     <div class="order-meta-item">
                         <span class="meta-label">Fecha de Compra</span>
                         <span class="meta-value">{{ pedido.fecha|date:"d/m/Y H:i" }}</span>
@@ -277,9 +283,19 @@
                 </div>
 
                 <!-- Detalles de envío -->
-                <div class="mb-4" style="font-size: 14px;">
-                    <span class="meta-label">Dirección de Envío:</span>
-                    <span class="text-white font-weight-500 ml-1">{{ pedido.direccion }}</span>
+                <div class="mb-4" style="font-size: 14px; display: flex; flex-direction: column; gap: 8px;">
+                    <div>
+                        <span class="meta-label">Dirección de Envío:</span>
+                        <span class="text-white font-weight-500 ml-1">{{ pedido.direccion }}</span>
+                    </div>
+                    {% if user.is_staff %}
+                    <div>
+                        <span class="meta-label">Contacto del Comprador:</span>
+                        <span class="text-white font-weight-500 ml-1">
+                            {{ pedido.nombre }} ({{ pedido.email }} | {{ pedido.telefono }})
+                        </span>
+                    </div>
+                    {% endif %}
                 </div>
 
                 <!-- Lista de artículos -->

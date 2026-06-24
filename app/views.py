@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Manga, RegistroUsuario, Pedido, DetallePedido
+from .models import Manga, RegistroUsuario, Pedido, DetallePedido, Contacto, Notificacion
 from .registroCli import registroClient
 from django.contrib.auth import authenticate, login, logout
 from .forms import CrudForm, ContactoForm, PerfilForm
@@ -23,6 +23,8 @@ import io
 # Create your views here.
 @login_required
 def MangaLords(request):
+    if request.user.is_staff:
+        return redirect('admin')
     return render(request,'app/MangaLords.html')
 
 @login_required
@@ -48,6 +50,8 @@ def admin(request):
 
 
 def directorio(request):
+    if request.user.is_authenticated and request.user.is_staff:
+        return redirect('admin')
     from django.db.models import Q
     query = request.GET.get('q', '').strip()
     if query:
@@ -78,6 +82,9 @@ def inicioSecion(request):
 
 @login_required
 def pagar(request):
+    if request.user.is_staff:
+        messages.error(request, "Los administradores no pueden realizar compras.")
+        return redirect('admin')
     cart = request.session.get('cart', {})
     if not cart:
         messages.warning(request, "Tu carrito está vacío.")
@@ -142,6 +149,8 @@ def pagar(request):
         
         if not all([nombre, email, telefono, direccion, ciudad, region, cardholder, card_num]):
             messages.error(request, "Por favor rellena todos los campos requeridos.")
+        elif not telefono.isdigit() or len(telefono) != 9:
+            messages.error(request, "El número de teléfono debe tener exactamente 9 dígitos numéricos.")
         else:
             try:
                 card_last_four = card_num[-4:] if len(card_num) >= 4 else card_num
@@ -201,6 +210,12 @@ def pagar(request):
                     request.session['cart'] = {}
                     request.session.modified = True
                     
+                    # Notificar al cliente
+                    Notificacion.objects.create(
+                        user=request.user,
+                        mensaje="🔔 Tu compra fue realizada exitosamente."
+                    )
+                    
                     return redirect('pago_exitoso')
             except Exception as e:
                 messages.error(request, f"Ocurrió un error al procesar tu pago: {str(e)}")
@@ -250,6 +265,14 @@ def Registro(request):
                     telefono=telefono
                 )
                 usuario.save()
+                
+                # Notificar a los administradores
+                for admin_user in User.objects.filter(is_staff=True):
+                    Notificacion.objects.create(
+                        user=admin_user,
+                        mensaje=f"🔔 Nuevo usuario registrado: {nombre} {apellido}."
+                    )
+
                 print('Se guardo')
                 login(request, user=user)
                 return redirect('MangaLords')
@@ -262,6 +285,10 @@ def Registro(request):
 # contacto
 @login_required
 def contacto(request):
+    if request.user.is_staff:
+        mensajes = Contacto.objects.all().order_by('-id')
+        return render(request, 'app/contacto_admin.html', {'mensajes': mensajes})
+
     initial_data = {}
     registro = RegistroUsuario.objects.filter(user=request.user).first()
     if registro:
@@ -272,31 +299,54 @@ def contacto(request):
         initial_data['nombre'] = request.user.get_full_name() or request.user.username
         initial_data['email'] = request.user.email
 
+    from django.db.models import Q
+    user_consultas = Contacto.objects.filter(
+        Q(user=request.user) | Q(email=request.user.email) | Q(email=request.user.username)
+    ).order_by('-fecha_creacion')
+
     if request.method == 'POST':
         formulario = ContactoForm(data=request.POST, initial=initial_data)
         formulario.fields['nombre'].disabled = True
         formulario.fields['email'].disabled = True
         
         if formulario.is_valid():
-            formulario.save()
+            contacto_obj = formulario.save(commit=False)
+            contacto_obj.user = request.user
+            contacto_obj.save()
+            
+            # Notificar a los administradores
+            for admin_user in User.objects.filter(is_staff=True):
+                Notificacion.objects.create(
+                    user=admin_user,
+                    mensaje=f"🔔 Nuevo mensaje pendiente de respuesta de {contacto_obj.nombre}."
+                )
+            
             form_nuevo = ContactoForm(initial=initial_data)
             form_nuevo.fields['nombre'].disabled = True
             form_nuevo.fields['email'].disabled = True
+            
+            user_consultas_new = Contacto.objects.filter(
+                Q(user=request.user) | Q(email=request.user.email) | Q(email=request.user.username)
+            ).order_by('-fecha_creacion')
+            
             data = {
                 'form': form_nuevo,
-                'mensaje': "Mensaje enviado"
+                'mensaje': "Mensaje enviado",
+                'consultas': user_consultas_new
             }
             return render(request, 'app/contacto.html', data)
         else:
             data = {
-                'form': formulario
+                'form': formulario,
+                'consultas': user_consultas
             }
     else:
         formulario = ContactoForm(initial=initial_data)
         formulario.fields['nombre'].disabled = True
         formulario.fields['email'].disabled = True
         data = {
-            'form': formulario
+            'form': formulario,
+            'consultas': user_consultas
         }
             
     return render(request,'app/contacto.html',data)
@@ -402,6 +452,13 @@ def agregar_producto(request):
                             else:
                                 mangas_actualizados += 1
                                 
+                    if mangas_creados > 0:
+                        for u in User.objects.filter(is_staff=False):
+                            Notificacion.objects.create(
+                                user=u,
+                                mensaje="🔔 Se agregaron nuevos mangas."
+                            )
+                                
                     if errores:
                         data['error_excel'] = "Errores en la carga: " + " | ".join(errores[:3])
                         if len(errores) > 3:
@@ -414,8 +471,20 @@ def agregar_producto(request):
             # Formulario manual normal
             formulario = CrudForm(request.POST, request.FILES)
             if formulario.is_valid():
-                formulario.save()
+                manga = formulario.save()
                 data["mensaje"] = "Manga guardado correctamente"
+                
+                # Notificar a los clientes
+                for u in User.objects.filter(is_staff=False):
+                    Notificacion.objects.create(
+                        user=u,
+                        mensaje=f"🔔 Se agregaron nuevos mangas: {manga.titulo}."
+                    )
+                    if manga.descuento > 0:
+                        Notificacion.objects.create(
+                            user=u,
+                            mensaje=f"🔔 Oferta disponible: {manga.descuento}% de descuento en {manga.titulo}."
+                        )
             else:
                 data["form"] = formulario
                 print(formulario.errors)
@@ -473,7 +542,15 @@ def modificar_manga(request, id):
         formulario = CrudForm(data=request.POST, instance=manga, files=request.FILES)
 
         if formulario.is_valid():
-            formulario.save()
+            original_descuento = manga.descuento
+            manga_saved = formulario.save()
+            
+            if manga_saved.descuento > original_descuento and manga_saved.descuento > 0:
+                for u in User.objects.filter(is_staff=False):
+                    Notificacion.objects.create(
+                        user=u,
+                        mensaje=f"🔔 Oferta disponible: {manga_saved.descuento}% de descuento en {manga_saved.titulo}."
+                    )
             return redirect(to="listar_productos")
         data["form"] = formulario
 
@@ -491,6 +568,9 @@ def eliminar_producto(request, id):
 
 
 def carrito(request):
+    if request.user.is_authenticated and request.user.is_staff:
+        messages.warning(request, "Los administradores no tienen acceso al carrito de compras.")
+        return redirect('admin')
     cart = request.session.get('cart', {})
     mangas_in_cart = []
     total_price = 0
@@ -1161,6 +1241,9 @@ def export_users_pdf(request):
 
 @login_required
 def agregar_al_carrito(request, pk):
+    if request.user.is_staff:
+        messages.error(request, "Los administradores no pueden añadir productos al carrito.")
+        return redirect('admin')
     manga = get_object_or_404(Manga, pk=pk)
     
     # Check if stock is 0
@@ -1184,6 +1267,9 @@ def agregar_al_carrito(request, pk):
 
 @login_required
 def eliminar_del_carrito(request, pk):
+    if request.user.is_staff:
+        messages.error(request, "Acción no permitida para administradores.")
+        return redirect('admin')
     cart = request.session.get('cart', {})
     if pk in cart:
         del cart[pk]
@@ -1196,6 +1282,9 @@ def eliminar_del_carrito(request, pk):
 @login_required
 @require_POST
 def actualizar_cantidad_carrito(request, pk):
+    if request.user.is_staff:
+        messages.error(request, "Acción no permitida para administradores.")
+        return redirect('admin')
     manga = get_object_or_404(Manga, pk=pk)
     cart = request.session.get('cart', {})
     
@@ -1240,10 +1329,105 @@ def pago_exitoso(request):
 
 @login_required
 def compras_realizadas(request):
-    pedidos = Pedido.objects.filter(user=request.user).order_by('-fecha').prefetch_related('detalles__manga')
+    if request.user.is_staff:
+        pedidos = Pedido.objects.all().order_by('-fecha').prefetch_related('detalles__manga')
+    else:
+        pedidos = Pedido.objects.filter(user=request.user).order_by('-fecha').prefetch_related('detalles__manga')
     context = {
         'pedidos': pedidos
     }
     return render(request, 'app/compras_realizadas.html', context)
+
+
+@login_required
+def toggle_user_role(request, username):
+    if not request.user.is_staff:
+        return redirect('MangaLords')
+    
+    target_user = get_object_or_404(User, username=username)
+    if target_user == request.user:
+        messages.error(request, "No puedes cambiar tu propio rol para no perder el acceso a la administración.")
+    else:
+        target_user.is_staff = not target_user.is_staff
+        target_user.save()
+        role_str = "Administrador" if target_user.is_staff else "Cliente"
+        messages.success(request, f"El rol del usuario {target_user.username} ha sido cambiado a {role_str} correctamente.")
+        
+    return redirect('listar_productos')
+
+
+@login_required
+def responder_contacto(request, pk):
+    if not request.user.is_staff:
+        return redirect('MangaLords')
+        
+    contacto_obj = get_object_or_404(Contacto, pk=pk)
+    
+    if request.method == 'POST':
+        respuesta_text = request.POST.get('respuesta', '').strip()
+        if respuesta_text:
+            from django.utils import timezone
+            contacto_obj.respuesta = respuesta_text
+            contacto_obj.respondido = True
+            contacto_obj.fecha_respuesta = timezone.now()
+            contacto_obj.save()
+            
+            # Notificar al cliente
+            target_user = contacto_obj.user
+            if not target_user and contacto_obj.email:
+                target_user = User.objects.filter(username=contacto_obj.email).first() or User.objects.filter(email=contacto_obj.email).first()
+                
+            if target_user:
+                Notificacion.objects.create(
+                    user=target_user,
+                    mensaje="🔔 Tu mensaje fue respondido."
+                )
+
+            messages.success(request, f"Respuesta enviada con éxito a {contacto_obj.nombre}.")
+        else:
+            messages.error(request, "La respuesta no puede estar vacía.")
+            
+    return redirect('contacto')
+
+
+@login_required
+def get_notifications(request):
+    from django.http import JsonResponse
+    notifs = Notificacion.objects.filter(user=request.user).order_by('-fecha_creacion')
+    data = []
+    for n in notifs[:20]:
+        data.append({
+            'id': n.id,
+            'mensaje': n.mensaje,
+            'leido': n.leido,
+            'fecha_creacion': n.fecha_creacion.strftime('%d/%m/%Y %H:%M')
+        })
+    unread_count = notifs.filter(leido=False).count()
+    return JsonResponse({
+        'notifications': data,
+        'unread_count': unread_count
+    })
+
+
+@login_required
+def mark_notification_read(request, pk):
+    from django.http import JsonResponse
+    if request.method == 'POST':
+        notif = get_object_or_404(Notificacion, pk=pk, user=request.user)
+        notif.leido = True
+        notif.save()
+        unread_count = Notificacion.objects.filter(user=request.user, leido=False).count()
+        return JsonResponse({'success': True, 'unread_count': unread_count})
+    return JsonResponse({'success': False, 'error': 'Invalid method'}, status=400)
+
+
+@login_required
+def mark_all_notifications_read(request):
+    from django.http import JsonResponse
+    if request.method == 'POST':
+        Notificacion.objects.filter(user=request.user, leido=False).update(leido=True)
+        return JsonResponse({'success': True, 'unread_count': 0})
+    return JsonResponse({'success': False, 'error': 'Invalid method'}, status=400)
+
 
 

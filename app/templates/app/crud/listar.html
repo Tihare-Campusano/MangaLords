@@ -154,6 +154,25 @@
         border-radius: 12px;
         text-transform: uppercase;
     }
+    .btn-toggle-role {
+        background: rgba(255, 255, 255, 0.05);
+        color: #e2e2e7;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 4px;
+        padding: 2px 6px;
+        font-size: 11px;
+        transition: all 0.2s ease;
+        text-decoration: none !important;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+    }
+    .btn-toggle-role:hover {
+        background: rgba(84, 136, 163, 0.15);
+        color: #5488a3;
+        border-color: #5488a3;
+    }
 </style>
 
 <ul class="nav nav-pills mb-4" id="adminTabs" role="tablist">
@@ -272,11 +291,19 @@
                                 <td>{{ u.email }}</td>
                                 <td class="text-center">{{ u.telefono }}</td>
                                 <td class="text-center">
-                                    {% if u.is_staff %}
-                                        <span class="badge-admin-type"><i class="fa-solid fa-shield-halved"></i> Admin</span>
-                                    {% else %}
-                                        <span class="badge-user-type"><i class="fa-solid fa-user"></i> Cliente</span>
-                                    {% endif %}
+                                    <div class="d-flex align-items-center justify-content-center" style="gap: 10px;">
+                                        {% if u.is_staff %}
+                                            <span class="badge-admin-type"><i class="fa-solid fa-shield-halved"></i> Admin</span>
+                                        {% else %}
+                                            <span class="badge-user-type"><i class="fa-solid fa-user"></i> Cliente</span>
+                                        {% endif %}
+                                        
+                                        {% if u.username != user.username %}
+                                            <a href="{% url 'toggle_user_role' username=u.username %}" class="btn-toggle-role" title="Cambiar rol de usuario">
+                                                <i class="fa-solid fa-arrows-rotate"></i> Alternar
+                                            </a>
+                                        {% endif %}
+                                    </div>
                                 </td>
                             </tr>
                         {% empty %}

@@ -284,7 +284,7 @@
                             
                             <div class="form-group inputBox">
                                 <span>Número de teléfono:</span>
-                                <input type="tel" class="form-control" id="tel" placeholder="912345678" name="tel" value="{% if profile.telefono %}{{ profile.telefono }}{% endif %}" required maxlength="9">
+                                <input type="text" class="form-control" id="tel" placeholder="912345678" name="tel" value="{% if profile.telefono %}{{ profile.telefono }}{% endif %}" required maxlength="9" pattern="[0-9]{9}" inputmode="numeric">
                                 <div class="invalid-feedback">Por favor ingresa tu teléfono.</div>
                             </div>
                             
@@ -426,5 +426,23 @@
     });
   }, false);
 })();
+
+document.addEventListener('DOMContentLoaded', () => {
+    const telInput = document.getElementById('tel');
+    if (telInput) {
+        telInput.addEventListener('input', (e) => {
+            e.target.value = e.target.value.replace(/\D/g, '');
+            if (e.target.value.length > 9) {
+                e.target.value = e.target.value.slice(0, 9);
+            }
+        });
+        telInput.addEventListener('paste', (e) => {
+            e.preventDefault();
+            const pastedData = (e.clipboardData || window.clipboardData).getData('text');
+            const cleanedData = pastedData.replace(/\D/g, '').slice(0, 9);
+            e.target.value = cleanedData;
+        });
+    }
+});
 </script>
 {% endblock %}

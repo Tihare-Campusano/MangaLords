@@ -25,6 +25,218 @@
 
     <!-- Estilos en línea del perfil para evitar problemas de caché estática -->
     <style>
+    .header-right-menu {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        order: 1;
+        z-index: 1010;
+    }
+
+    .header-notifications-container {
+        position: relative;
+        cursor: pointer;
+        display: inline-block;
+    }
+
+    .header-notifications-trigger {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.05);
+        color: #b2c0cc;
+        border: 2px solid rgba(84, 136, 163, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .header-notifications-container:hover .header-notifications-trigger {
+        transform: scale(1.08);
+        border-color: #5488a3;
+        color: #ffffff;
+        background: rgba(84, 136, 163, 0.1);
+        box-shadow: 0 0 12px rgba(84, 136, 163, 0.5);
+    }
+
+    .notification-badge {
+        position: absolute;
+        top: -4px;
+        right: -4px;
+        background: #ff3344;
+        color: #ffffff;
+        font-size: 10px;
+        font-weight: 700;
+        min-width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid #121216;
+        box-shadow: 0 0 8px rgba(255, 51, 68, 0.6);
+        padding: 0 4px;
+    }
+
+    .notifications-dropdown {
+        position: absolute;
+        top: calc(100% + 12px);
+        right: 0;
+        width: 320px;
+        background: rgba(13, 13, 17, 0.95);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(84, 136, 163, 0.3);
+        border-radius: 12px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8), 0 0 15px rgba(84, 136, 163, 0.15);
+        padding: 15px;
+        display: flex;
+        flex-direction: column;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-10px);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 1020;
+    }
+
+    .header-notifications-container.active .notifications-dropdown {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+
+    .notifications-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        padding-bottom: 10px;
+        margin-bottom: 10px;
+    }
+
+    .notifications-title {
+        font-family: 'Cinzel', serif;
+        font-size: 15px;
+        font-weight: 700;
+        color: #ffffff;
+        margin: 0;
+    }
+
+    .mark-all-read-btn {
+        background: none;
+        border: none;
+        color: #ff3344;
+        font-size: 11.5px;
+        font-weight: 600;
+        cursor: pointer;
+        padding: 0;
+        transition: color 0.2s;
+    }
+
+    .mark-all-read-btn:hover {
+        color: #ff5566;
+        text-decoration: underline;
+    }
+
+    .notifications-list {
+        max-height: 250px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        padding-right: 4px;
+    }
+
+    .notifications-list::-webkit-scrollbar {
+        width: 6px;
+    }
+    
+    .notifications-list::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 10px;
+    }
+    
+    .notifications-list::-webkit-scrollbar-thumb {
+        background: rgba(84, 136, 163, 0.4);
+        border-radius: 10px;
+    }
+    
+    .notifications-list::-webkit-scrollbar-thumb:hover {
+        background: rgba(84, 136, 163, 0.7);
+    }
+
+    .notification-item {
+        padding: 10px 12px;
+        border-radius: 8px;
+        font-size: 13px;
+        line-height: 1.4;
+        color: #e2e2e7;
+        transition: all 0.2s ease;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        text-align: left;
+        border: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .notification-item.unread {
+        background: rgba(201, 26, 36, 0.06);
+        border-left: 3px solid #ff3344;
+        border-color: rgba(201, 26, 36, 0.25);
+    }
+
+    .notification-item.read {
+        background: rgba(255, 255, 255, 0.02);
+        opacity: 0.75;
+    }
+
+    .notification-item-text {
+        padding-right: 20px;
+    }
+
+    .notification-item-time {
+        font-size: 10.5px;
+        color: #888896;
+    }
+
+    .mark-read-single-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        border: none;
+        background: rgba(255, 255, 255, 0.1);
+        color: #b2c0cc;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 9px;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .mark-read-single-btn:hover {
+        background: #ff3344;
+        color: #ffffff;
+    }
+
+    .empty-notifications {
+        padding: 20px 10px;
+        text-align: center;
+        color: #888896;
+        font-size: 13px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+    }
+
     .header-profile-container {
         position: relative;
         cursor: pointer;
@@ -205,32 +417,57 @@
     <nav class="barNav">
         <!-- logo/perfil -->
         {% if user.is_authenticated %}
-            <div class="header-profile-container">
-                <div class="header-profile-trigger" id="profileTrigger">
-                    <div class="profile-avatar">
-                        {{ user.first_name|slice:":1"|upper|default:user.username|slice:":1"|upper }}
+            <!-- CSRF Token oculto para asegurar que AJAX siempre lo tenga disponible -->
+            <div style="display:none;">{% csrf_token %}</div>
+
+            <div class="header-right-menu">
+                <!-- Contenedor de Notificaciones -->
+                <div class="header-notifications-container">
+                    <div class="header-notifications-trigger" id="notificationsTrigger" title="Notificaciones">
+                        <i class="fa-solid fa-bell"></i>
+                        <span class="notification-badge" id="notificationBadge" style="display: none;">0</span>
+                    </div>
+                    <div class="notifications-dropdown">
+                        <div class="notifications-header">
+                            <span class="notifications-title">Notificaciones</span>
+                            <button onclick="markAllNotificationsRead(event)" class="mark-all-read-btn">Marcar todo como leído</button>
+                        </div>
+                        <div class="notifications-list" id="notificationsList">
+                            <!-- Se renderiza dinámicamente con JS -->
+                        </div>
                     </div>
                 </div>
-                <div class="profile-dropdown">
-                    <div class="dropdown-header">
-                        <p class="dropdown-username">{{ user.first_name|default:user.username }} {{ user.last_name }}</p>
-                        {% if user.is_staff %}
-                            <span class="badge badge-admin"><i class="fa-solid fa-shield-halved"></i> Administrador 🛡️</span>
-                        {% else %}
-                            <span class="badge badge-user"><i class="fa-solid fa-user"></i> Usuario 👤</span>
-                        {% endif %}
+
+                <!-- Perfil de Usuario -->
+                <div class="header-profile-container">
+                    <div class="header-profile-trigger" id="profileTrigger">
+                        <div class="profile-avatar">
+                            {{ user.first_name|slice:":1"|upper|default:user.username|slice:":1"|upper }}
+                        </div>
                     </div>
-                    <div class="dropdown-divider"></div>
-                    <a href="{% url 'perfil' %}" class="dropdown-item-link"><i class="fa-solid fa-user-gear"></i> Mi Perfil</a>
-                    {% if user.pedidos.exists %}
-                        <a href="{% url 'compras_realizadas' %}" class="dropdown-item-link"><i class="fa-solid fa-clock-rotate-left"></i> Compras Realizadas</a>
-                    {% endif %}
-                    {% if user.is_staff %}
-                        <a href="{% url 'agregar_producto' %}" class="dropdown-item-link"><i class="fa-solid fa-screwdriver-wrench"></i> Administración</a>
-                    {% endif %}
-                    <a href="{% url 'MangaLords' %}" class="dropdown-item-link"><i class="fa-solid fa-house"></i> Inicio</a>
-                    <div class="dropdown-divider"></div>
-                    <a href="{% url 'cerrarSesion' %}" class="dropdown-item-link logout-link"><i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesión</a>
+                    <div class="profile-dropdown">
+                        <div class="dropdown-header">
+                            <p class="dropdown-username">{{ user.first_name|default:user.username }} {{ user.last_name }}</p>
+                            {% if user.is_staff %}
+                                <span class="badge badge-admin"><i class="fa-solid fa-shield-halved"></i> Administrador 🛡️</span>
+                            {% else %}
+                                <span class="badge badge-user"><i class="fa-solid fa-user"></i> Usuario 👤</span>
+                            {% endif %}
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <a href="{% url 'perfil' %}" class="dropdown-item-link"><i class="fa-solid fa-user-gear"></i> Mi Perfil</a>
+                        {% if user.pedidos.exists or user.is_staff %}
+                            <a href="{% url 'compras_realizadas' %}" class="dropdown-item-link"><i class="fa-solid fa-clock-rotate-left"></i> Compras Realizadas</a>
+                        {% endif %}
+                        {% if user.is_staff %}
+                            <a href="{% url 'agregar_producto' %}" class="dropdown-item-link"><i class="fa-solid fa-screwdriver-wrench"></i> Administración</a>
+                        {% endif %}
+                        {% if not user.is_staff %}
+                            <a href="{% url 'MangaLords' %}" class="dropdown-item-link"><i class="fa-solid fa-house"></i> Inicio</a>
+                        {% endif %}
+                        <div class="dropdown-divider"></div>
+                        <a href="{% url 'cerrarSesion' %}" class="dropdown-item-link logout-link"><i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesión</a>
+                    </div>
                 </div>
             </div>
         {% else %}
@@ -248,25 +485,33 @@
         </form>
         <!-- seccion de opciones -->
         <ol>
-            <li><a href="{% url 'MangaLords'%}">Inicio</a></li>
-            
             {% if user.is_authenticated %}
-                <li><a href="{% url 'directorio'%}">Directorio</a></li>
-                <li><a href="{% url 'contacto'%}">Contáctanos</a></li>
-                <li>
-                    <!--Boton Compra-->
-                    <div class="boton-modal">
-                        <a href="{% url 'carrito' %}">
-                            <i class="fa-solid fa-cart-shopping"></i> Compra
-                            {% if cart_total_items > 0 %}
-                                <span class="badge badge-light ml-1" style="font-size: 11px; padding: 2px 6px; border-radius: 10px; color: #c91a24; font-weight: bold; background: white;">{{ cart_total_items }}</span>
-                            {% endif %}
-                        </a>
-                    </div>
-                </li>
+                {% if user.is_staff %}
+                    <!-- Menú para Administrador -->
+                    <li><a href="{% url 'compras_realizadas' %}">Compras Realizadas</a></li>
+                    <li><a href="{% url 'admin' %}">Panel de admin</a></li>
+                    <li><a href="{% url 'contacto' %}">Contáctanos</a></li>
+                {% else %}
+                    <!-- Menú para Cliente -->
+                    <li><a href="{% url 'MangaLords' %}">Inicio</a></li>
+                    <li><a href="{% url 'directorio' %}">Directorio</a></li>
+                    <li><a href="{% url 'contacto' %}">Contáctanos</a></li>
+                    <li>
+                        <!-- Botón Compra -->
+                        <div class="boton-modal">
+                            <a href="{% url 'carrito' %}">
+                                <i class="fa-solid fa-cart-shopping"></i> Compra
+                                {% if cart_total_items > 0 %}
+                                    <span class="badge badge-light ml-1" style="font-size: 11px; padding: 2px 6px; border-radius: 10px; color: #c91a24; font-weight: bold; background: white;">{{ cart_total_items }}</span>
+                                {% endif %}
+                            </a>
+                        </div>
+                    </li>
+                {% endif %}
             {% else %}
-                <li><a href="{% url 'inicioSecion'%}">Iniciar Sesión</a></li>
-                <li><a href="{% url 'RegistroUsuario'%}">Registrarse</a></li>
+                <li><a href="{% url 'MangaLords' %}">Inicio</a></li>
+                <li><a href="{% url 'inicioSecion' %}">Iniciar Sesión</a></li>
+                <li><a href="{% url 'RegistroUsuario' %}">Registrarse</a></li>
             {% endif %}
         </ol>
         
@@ -381,10 +626,20 @@
         // Toggle del menú de perfil al hacer click
         const profileTrigger = document.getElementById('profileTrigger');
         const profileContainer = document.querySelector('.header-profile-container');
+        
+        // ── Notificaciones JS ──
+        const notifContainer = document.querySelector('.header-notifications-container');
+        const notifTrigger = document.getElementById('notificationsTrigger');
+        const notifBadge = document.getElementById('notificationBadge');
+        const notifList = document.getElementById('notificationsList');
+
         if (profileTrigger && profileContainer) {
             profileTrigger.addEventListener('click', (e) => {
                 e.stopPropagation();
                 profileContainer.classList.toggle('active');
+                if (profileContainer.classList.contains('active')) {
+                    if (notifContainer) notifContainer.classList.remove('active');
+                }
             });
 
             document.addEventListener('click', (e) => {
@@ -393,6 +648,127 @@
                 }
             });
         }
+
+        function updateNotifBadge(count) {
+            if (count > 0) {
+                notifBadge.textContent = count;
+                notifBadge.style.display = 'flex';
+            } else {
+                notifBadge.style.display = 'none';
+            }
+        }
+
+        function loadNotifications() {
+            fetch('/notificaciones/')
+                .then(r => r.json())
+                .then(data => {
+                    updateNotifBadge(data.unread_count);
+                    
+                    if (!notifList) return;
+                    notifList.innerHTML = '';
+                    
+                    if (data.notifications.length === 0) {
+                        notifList.innerHTML = `
+                            <div class="empty-notifications">
+                                <i class="fa-solid fa-bell-slash" style="font-size: 24px; opacity: 0.3;"></i>
+                                <span>No tienes notificaciones</span>
+                            </div>
+                        `;
+                        return;
+                    }
+
+                    data.notifications.forEach(n => {
+                        const itemDiv = document.createElement('div');
+                        itemDiv.className = `notification-item ${n.leido ? 'read' : 'unread'}`;
+                        itemDiv.id = `notif-item-${n.id}`;
+                        
+                        let checkButton = '';
+                        if (!n.leido) {
+                            checkButton = `
+                                <button onclick="markNotificationRead(event, ${n.id})" class="mark-read-single-btn" title="Marcar como leída">
+                                    <i class="fa-solid fa-check"></i>
+                                </button>
+                            `;
+                        }
+
+                        itemDiv.innerHTML = `
+                            <div class="notification-item-text">${n.mensaje}</div>
+                            <div class="notification-item-time">${n.fecha_creacion}</div>
+                            ${checkButton}
+                        `;
+                        notifList.appendChild(itemDiv);
+                    });
+                })
+                .catch(err => console.error("Error al cargar notificaciones:", err));
+        }
+
+        if (notifTrigger) {
+            loadNotifications();
+            setInterval(loadNotifications, 30000);
+
+            notifTrigger.addEventListener('click', (e) => {
+                e.stopPropagation();
+                notifContainer.classList.toggle('active');
+                if (notifContainer.classList.contains('active')) {
+                    if (profileContainer) profileContainer.classList.remove('active');
+                    loadNotifications();
+                }
+            });
+
+            document.addEventListener('click', (e) => {
+                if (notifContainer && !notifContainer.contains(e.target)) {
+                    notifContainer.classList.remove('active');
+                }
+            });
+        }
+
+        // Definir funciones globales para llamadas inline en HTML
+        window.markNotificationRead = function(event, pk) {
+            event.stopPropagation();
+            fetch(`/notificaciones/leer/${pk}/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': getCsrf()
+                }
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.success) {
+                    const item = document.getElementById(`notif-item-${pk}`);
+                    if (item) {
+                        item.classList.replace('unread', 'read');
+                        const btn = item.querySelector('.mark-read-single-btn');
+                        if (btn) btn.remove();
+                    }
+                    updateNotifBadge(data.unread_count);
+                }
+            })
+            .catch(err => console.error("Error al marcar leída:", err));
+        };
+
+        window.markAllNotificationsRead = function(event) {
+            if (event) event.stopPropagation();
+            fetch('/notificaciones/leer-todas/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': getCsrf()
+                }
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.success) {
+                    document.querySelectorAll('.notification-item.unread').forEach(item => {
+                        item.classList.replace('unread', 'read');
+                        const btn = item.querySelector('.mark-read-single-btn');
+                        if (btn) btn.remove();
+                    });
+                    updateNotifBadge(0);
+                }
+            })
+            .catch(err => console.error("Error al marcar todas leídas:", err));
+        };
     });
     </script>
     </body>

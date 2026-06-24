@@ -95,9 +95,11 @@
                             <i class="fa-solid fa-arrow-left mr-2"></i> Volver
                         </a>
                         {% if mangas.cantidad > 0 %}
-                            <a href="{% url 'agregar_al_carrito' pk=mangas.id %}" class="btn-carrito-add-large">
-                                <i class="fa-solid fa-cart-plus mr-2"></i> Añadir al Carrito
-                            </a>
+                            {% if not user.is_staff %}
+                                <a href="{% url 'agregar_al_carrito' pk=mangas.id %}" class="btn-carrito-add-large">
+                                    <i class="fa-solid fa-cart-plus mr-2"></i> Añadir al Carrito
+                                </a>
+                            {% endif %}
                         {% else %}
                             <button class="btn-carrito-out" disabled>
                                 <i class="fa-solid fa-ban mr-2"></i> Agotado

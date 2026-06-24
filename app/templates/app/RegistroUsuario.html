@@ -92,9 +92,11 @@
                         <label for="id_telefono" class="formulario__label">Teléfono</label>
                         <div class="formulario__grupo-input">
                             <i class="formulario__icon fa-solid fa-phone"></i>
-                            <input type="number" 
+                            <input type="text" 
                                    name="telefono" 
-                                   max="999999999" 
+                                   maxlength="9" 
+                                   pattern="[0-9]{9}"
+                                   inputmode="numeric"
                                    required 
                                    id="id_telefono" 
                                    class="formulario__input" 
@@ -165,4 +167,123 @@
         </div>
     </section>
 </div>
-{% endblock %}
+{% block js %}
+{{ block.super }}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const form = document.querySelector('form');
+        const telefonoInput = document.getElementById('id_telefono');
+        
+        if (telefonoInput) {
+            telefonoInput.addEventListener('input', (e) => {
+                e.target.value = e.target.value.replace(/\D/g, '');
+                if (e.target.value.length > 9) {
+                    e.target.value = e.target.value.slice(0, 9);
+                }
+            });
+            telefonoInput.addEventListener('paste', (e) => {
+                e.preventDefault();
+                const pastedData = (e.clipboardData || window.clipboardData).getData('text');
+                const cleanedData = pastedData.replace(/\D/g, '').slice(0, 9);
+                e.target.value = cleanedData;
+            });
+        }
+
+        if (form) {
+            form.addEventListener('submit', (e) => {
+                // Remove previous JS validation errors
+                document.querySelectorAll('.js-error').forEach(el => el.remove());
+                let hasErrors = false;
+
+                const showError = (fieldId, message) => {
+                    hasErrors = true;
+                    const inputField = document.getElementById(fieldId);
+                    if (inputField) {
+                        const fieldGroup = inputField.closest('.formulario__grupo');
+                        if (fieldGroup) {
+                            const errorP = document.createElement('p');
+                            errorP.className = 'formulario__input-error js-error';
+                            errorP.style.display = 'block';
+                            errorP.innerHTML = `<i class="fa-solid fa-circle-exclamation"></i> ${message}`;
+                            fieldGroup.appendChild(errorP);
+                        }
+                    }
+                };
+
+                // Nombres
+                const nombresInput = document.getElementById('id_nombres');
+                if (nombresInput) {
+                    const val = nombresInput.value.trim();
+                    if (val.length < 2) {
+                        showError('id_nombres', 'Los nombres deben tener al menos 2 caracteres.');
+                    } else if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(val)) {
+                        showError('id_nombres', 'Los nombres solo deben contener letras y espacios.');
+                    }
+                }
+
+                // Apellidos
+                const apellidosInput = document.getElementById('id_apellidos');
+                if (apellidosInput) {
+                    const val = apellidosInput.value.trim();
+                    if (val.length < 2) {
+                        showError('id_apellidos', 'Los apellidos deben tener al menos 2 caracteres.');
+                    } else if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(val)) {
+                        showError('id_apellidos', 'Los apellidos solo deben contener letras y espacios.');
+                    }
+                }
+
+                // Email
+                const emailInput = document.getElementById('id_email');
+                if (emailInput) {
+                    const val = emailInput.value.trim();
+                    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) {
+                        showError('id_email', 'Ingresa un correo electrónico válido.');
+                    }
+                }
+
+                // Teléfono
+                if (telefonoInput) {
+                    const val = telefonoInput.value.trim();
+                    if (val.length !== 9) {
+                        showError('id_telefono', 'El teléfono debe tener exactamente 9 dígitos.');
+                    }
+                }
+
+                // Contraseña
+                const password1Input = document.getElementById('id_password1');
+                const password2Input = document.getElementById('id_password2');
+                let p1Val = "";
+                if (password1Input) {
+                    p1Val = password1Input.value;
+                    if (p1Val.length < 8) {
+                        showError('id_password1', 'La contraseña debe tener al menos 8 caracteres.');
+                    } else if (!/[a-z]/.test(p1Val)) {
+                        showError('id_password1', 'La contraseña debe tener al menos una letra minúscula.');
+                    } else if (!/[A-Z]/.test(p1Val)) {
+                        showError('id_password1', 'La contraseña debe tener al menos una letra mayúscula.');
+                    } else if (!/[0-9]/.test(p1Val)) {
+                        showError('id_password1', 'La contraseña debe tener al menos un número.');
+                    }
+                }
+
+                // Confirmar Contraseña
+                if (password2Input) {
+                    const p2Val = password2Input.value;
+                    if (p1Val !== p2Val) {
+                        showError('id_password2', 'Las contraseñas no coinciden.');
+                    }
+                }
+
+                if (hasErrors) {
+                    e.preventDefault();
+                    // Scroll to first error
+                    const firstError = document.querySelector('.js-error');
+                    if (firstError) {
+                        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                }
+            });
+        }
+    });
+</script>
+{% endblock %}
